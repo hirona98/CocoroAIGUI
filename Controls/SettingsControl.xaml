@@ -6,35 +6,35 @@
              xmlns:local="clr-namespace:CocoroAIGUI.Controls"
              mc:Ignorable="d"
              d:DesignHeight="450"
-        d:DesignWidth="600">
+             d:DesignWidth="600">
 
     <Grid Background="#FAFAFA">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="20">
                 <TextBlock Text="CocoroAI設定"
-                        FontSize="24"
-                        FontWeight="SemiBold"
-                        Margin="0,0,0,20"/>
+                           FontSize="24"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,20"/>
 
                 <!-- 接続設定 -->
                 <GroupBox Header="接続設定"
-                        Margin="0,0,0,10"
-                        Padding="10">
+                          Margin="0,0,0,10"
+                          Padding="10">
                     <StackPanel>
                         <TextBlock Text="WebSocket URL"
-                                Margin="0,5,0,5"/>
+                                   Margin="0,5,0,5"/>
                         <TextBox x:Name="WebSocketUrlTextBox"
-                                Text="ws://localhost:8080/"
-                                Margin="0,0,0,10"/>
+                                 Text="ws://127.0.0.1:8080/"
+                                 Margin="0,0,0,10"/>
 
                         <TextBlock Text="ユーザーID"
-                                Margin="0,5,0,5"/>
+                                   Margin="0,5,0,5"/>
                         <TextBox x:Name="UserIdTextBox"
-                                Text="user01"
-                                Margin="0,0,0,10"/>
+                                 Text="user01"
+                                 Margin="0,0,0,10"/>
 
                         <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Right">
+                                    HorizontalAlignment="Right">
                             <Button x:Name="ConnectButton"
                                     Content="接続"
                                     Width="100"
@@ -52,23 +52,23 @@
 
                 <!-- キャラクター設定 -->
                 <GroupBox Header="キャラクター設定"
-                        Margin="0,0,0,10"
-                        Padding="10">
+                          Margin="0,0,0,10"
+                          Padding="10">
                     <StackPanel>
                         <TextBlock Text="キャラクターモデル"
-                                Margin="0,5,0,5"/>
+                                   Margin="0,5,0,5"/>
                         <ComboBox x:Name="CharacterModelComboBox"
-                                Margin="0,0,0,10"
-                                SelectionChanged="CharacterModelComboBox_SelectionChanged">
+                                  Margin="0,0,0,10"
+                                  SelectionChanged="CharacterModelComboBox_SelectionChanged">
                             <ComboBoxItem Content="デフォルト"
-                                    IsSelected="True"/>
+                                          IsSelected="True"/>
                             <ComboBoxItem Content="女性キャラ"/>
                             <ComboBoxItem Content="男性キャラ"/>
                             <ComboBoxItem Content="ロボットキャラ"/>
                         </ComboBox>
 
                         <TextBlock Text="反応速度"
-                                Margin="0,5,0,5"/>
+                                   Margin="0,5,0,5"/>
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -82,32 +82,32 @@
                                     IsSnapToTickEnabled="True"
                                     ValueChanged="ReactionSpeedSlider_ValueChanged"/>
                             <TextBlock Grid.Column="1"
-                                    Text="{Binding ElementName=ReactionSpeedSlider, Path=Value, StringFormat=N0}"
+                                       Text="{Binding ElementName=ReactionSpeedSlider, Path=Value, StringFormat=N0}"
                                        Width="30"
-                                    TextAlignment="Right"/>
+                                       TextAlignment="Right"/>
                         </Grid>
                     </StackPanel>
                 </GroupBox>
 
                 <!-- AI設定 -->
                 <GroupBox Header="AI設定"
-                        Margin="0,0,0,10"
-                        Padding="10">
+                          Margin="0,0,0,10"
+                          Padding="10">
                     <StackPanel>
                         <TextBlock Text="AIモデル"
-                                Margin="0,5,0,5"/>
+                                   Margin="0,5,0,5"/>
                         <ComboBox x:Name="AiModelComboBox"
-                                Margin="0,0,0,10"
-                                SelectionChanged="AiModelComboBox_SelectionChanged">
+                                  Margin="0,0,0,10"
+                                  SelectionChanged="AiModelComboBox_SelectionChanged">
                             <ComboBoxItem Content="OpenAI GPT-4"
-                                    IsSelected="True"/>
+                                          IsSelected="True"/>
                             <ComboBoxItem Content="OpenAI GPT-3.5"/>
                             <ComboBoxItem Content="Claude"/>
                             <ComboBoxItem Content="ローカルモデル"/>
                         </ComboBox>
 
                         <TextBlock Text="応答温度"
-                                Margin="0,5,0,5"/>
+                                   Margin="0,5,0,5"/>
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -121,47 +121,47 @@
                                     IsSnapToTickEnabled="True"
                                     ValueChanged="TemperatureSlider_ValueChanged"/>
                             <TextBlock Grid.Column="1"
-                                    Text="{Binding ElementName=TemperatureSlider, Path=Value, StringFormat=N1}"
+                                       Text="{Binding ElementName=TemperatureSlider, Path=Value, StringFormat=N1}"
                                        Width="30"
-                                    TextAlignment="Right"/>
+                                       TextAlignment="Right"/>
                         </Grid>
 
                         <CheckBox x:Name="UseVoiceCheckBox"
-                                Content="音声出力を有効にする"
-                                Margin="0,5,0,5"
+                                  Content="音声出力を有効にする"
+                                  Margin="0,5,0,5"
                                   Checked="UseVoiceCheckBox_CheckedChanged"
-                                Unchecked="UseVoiceCheckBox_CheckedChanged"/>
+                                  Unchecked="UseVoiceCheckBox_CheckedChanged"/>
                     </StackPanel>
                 </GroupBox>
 
                 <!-- その他設定 -->
                 <GroupBox Header="その他設定"
-                        Margin="0,0,0,10"
-                        Padding="10">
+                          Margin="0,0,0,10"
+                          Padding="10">
                     <StackPanel>
                         <CheckBox x:Name="StartupCheckBox"
-                                Content="Windowsスタートアップ時に起動"
-                                Margin="0,5,0,5"/>
+                                  Content="Windowsスタートアップ時に起動"
+                                  Margin="0,5,0,5"/>
                         <CheckBox x:Name="MinimizeToTrayCheckBox"
-                                Content="最小化時にタスクトレイに格納"
-                                Margin="0,5,0,5"/>
+                                  Content="最小化時にタスクトレイに格納"
+                                  Margin="0,5,0,5"/>
 
                         <TextBlock Text="システムステータス"
-                                Margin="0,10,0,5"
-                                FontWeight="SemiBold"/>
+                                   Margin="0,10,0,5"
+                                   FontWeight="SemiBold"/>
                         <TextBlock x:Name="ConnectionStatusTextBlock"
-                                Text="接続状態: 切断"
-                                Margin="0,5,0,5"/>
+                                   Text="接続状態: 切断"
+                                   Margin="0,5,0,5"/>
                         <TextBlock x:Name="CpuUsageTextBlock"
-                                Text="CPU使用率: --%"
-                                Margin="0,5,0,5"/>
+                                   Text="CPU使用率: --%"
+                                   Margin="0,5,0,5"/>
                     </StackPanel>
                 </GroupBox>
 
                 <!-- ボタン領域 -->
                 <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right"
-                        Margin="0,10,0,0">
+                            HorizontalAlignment="Right"
+                            Margin="0,10,0,0">
                     <Button x:Name="SaveSettingsButton"
                             Content="設定を保存"
                             Width="120"

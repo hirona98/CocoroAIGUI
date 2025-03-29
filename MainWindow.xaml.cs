@@ -15,7 +15,7 @@ namespace CocoroAIGUI
     {
         private CommunicationService? _communicationService;
         private string _currentUserId = "user01";
-        private string _currentWebSocketUrl = "ws://localhost:8080/";
+        private string _currentWebSocketUrl = "ws://127.0.0.1:8080/";
         private Dictionary<string, string> _currentSettings = new Dictionary<string, string>();
 
         public MainWindow()

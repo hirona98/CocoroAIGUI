@@ -57,7 +57,7 @@ namespace CocoroAIGUI.Communication
         /// <summary>
         /// WebSocketクライアントのコンストラクタ
         /// </summary>
-        /// <param name="serverUrl">接続先WebSocketサーバーURL (例: ws://localhost:8080/)</param>
+        /// <param name="serverUrl">接続先WebSocketサーバーURL (例: ws://127.0.0.1:8080/)</param>
         public WebSocketClient(string serverUrl)
         {
             _serverUri = new Uri(serverUrl);
