@@ -169,7 +169,8 @@ namespace CocoroAIGUI.Communication
             try
             {
                 var message = new WebSocketMessage(type, payload);
-                var json = JsonSerializer.Serialize(message);
+                var json = JsonSerializer.Serialize(message, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                System.Diagnostics.Debug.WriteLine($"送信するメッセージ: {json}");
                 var buffer = Encoding.UTF8.GetBytes(json);
 
                 await _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, _cts.Token);
