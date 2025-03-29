@@ -4,9 +4,100 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CocoroAIGUI"
+        xmlns:controls="clr-namespace:CocoroAIGUI.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="CocoroAI"
+        Height="600"
+        Width="900"
+        WindowStartupLocation="CenterScreen">
 
+    <Window.Resources>
+        <!-- タブスタイル -->
+        <Style x:Key="TabItemStyle"
+                TargetType="TabItem">
+            <Setter Property="Background"
+                    Value="#F0F0F0"/>
+            <Setter Property="BorderThickness"
+                    Value="0"/>
+            <Setter Property="Padding"
+                    Value="12,8"/>
+            <Setter Property="FontSize"
+                    Value="14"/>
+            <Setter Property="Foreground"
+                    Value="#666666"/>
+            <Setter Property="Margin"
+                    Value="0,0,1,0"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected"
+                        Value="True">
+                    <Setter Property="Background"
+                            Value="White"/>
+                    <Setter Property="Foreground"
+                            Value="#0078D7"/>
+                    <Setter Property="BorderThickness"
+                            Value="0,0,0,3"/>
+                    <Setter Property="BorderBrush"
+                            Value="#0078D7"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ヘッダー部分 -->
+        <Grid Grid.Row="0"
+                Background="#0078D7"
+                Height="60">
+            <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    Margin="20,0">
+                <TextBlock Text="CocoroAI"
+                        FontSize="24"
+                        Foreground="White"
+                        FontWeight="SemiBold"/>
+                <TextBlock x:Name="StatusTextBlock"
+                        Text="  (切断中)"
+                        FontSize="14"
+                        Foreground="WhiteSmoke"
+                        VerticalAlignment="Center"
+                        Margin="10,0,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- メインコンテンツ部分 -->
+        <TabControl Grid.Row="1"
+                BorderThickness="0"
+                Background="White">
+            <TabItem Header="チャット"
+                    Style="{StaticResource TabItemStyle}">
+                <controls:ChatControl x:Name="ChatControlInstance"/>
+            </TabItem>
+
+            <TabItem Header="設定"
+                    Style="{StaticResource TabItemStyle}">
+                <controls:SettingsControl x:Name="SettingsControlInstance"/>
+            </TabItem>
+        </TabControl>
+
+        <!-- フッター部分 -->
+        <StatusBar Grid.Row="2"
+                Height="30"
+                Background="#F0F0F0">
+            <StatusBarItem>
+                <TextBlock x:Name="ConnectionStatusText"
+                        Text="接続状態: 切断中"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock x:Name="VersionText"
+                        Text="Version 1.0.0"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
