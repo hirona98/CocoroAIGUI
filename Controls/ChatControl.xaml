@@ -13,7 +13,7 @@
                 <Style x:Key="UserBubbleStyle"
                        TargetType="Border">
                         <Setter Property="Background"
-                                Value="#DCF8C6"/>
+                                Value="#FFFFFF"/>
                         <Setter Property="BorderBrush"
                                 Value="#CCCCCC"/>
                         <Setter Property="BorderThickness"
@@ -33,7 +33,7 @@
                 <Style x:Key="AiBubbleStyle"
                        TargetType="Border">
                         <Setter Property="Background"
-                                Value="#F0F0F0"/>
+                                Value="#FFFFFF"/>
                         <Setter Property="BorderBrush"
                                 Value="#CCCCCC"/>
                         <Setter Property="BorderThickness"
@@ -126,8 +126,8 @@
                                 Height="55"
                                 Margin="5,0,0,0"
                                 Click="SendButton_Click"
-                                Background="#0078D7"
-                                Foreground="White"
+                                Background="#4873CF"
+                                Foreground="WhiteSmoke"
                                 BorderThickness="0"
                                 FontSize="14">
                                 <Button.Resources>

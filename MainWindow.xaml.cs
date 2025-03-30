@@ -97,13 +97,11 @@ namespace CocoroAIGUI
             {
                 if (isConnected)
                 {
-                    StatusTextBlock.Text = "  (接続中)";
                     ConnectionStatusText.Text = "接続状態: 接続中";
                 }
                 else
                 {
                     string statusText = customMessage ?? "切断中";
-                    StatusTextBlock.Text = $"  ({statusText})";
                     ConnectionStatusText.Text = $"接続状態: {statusText}";
                 }
             });

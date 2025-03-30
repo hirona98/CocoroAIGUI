@@ -11,38 +11,6 @@
         Width="900"
         WindowStartupLocation="CenterScreen">
 
-        <Window.Resources>
-                <!-- タブスタイル -->
-                <Style x:Key="TabItemStyle"
-                       TargetType="TabItem">
-                        <Setter Property="Background"
-                                Value="#F0F0F0"/>
-                        <Setter Property="BorderThickness"
-                                Value="0"/>
-                        <Setter Property="Padding"
-                                Value="12,8"/>
-                        <Setter Property="FontSize"
-                                Value="14"/>
-                        <Setter Property="Foreground"
-                                Value="#666666"/>
-                        <Setter Property="Margin"
-                                Value="0,0,1,0"/>
-                        <Style.Triggers>
-                                <Trigger Property="IsSelected"
-                                         Value="True">
-                                        <Setter Property="Background"
-                                                Value="White"/>
-                                        <Setter Property="Foreground"
-                                                Value="#0078D7"/>
-                                        <Setter Property="BorderThickness"
-                                                Value="0,0,0,3"/>
-                                        <Setter Property="BorderBrush"
-                                                Value="#0078D7"/>
-                                </Trigger>
-                        </Style.Triggers>
-                </Style>
-        </Window.Resources>
-
         <Grid>
                 <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -52,7 +20,7 @@
 
                 <!-- ヘッダー部分 -->
                 <Grid Grid.Row="0"
-                      Background="#0078D7"
+                      Background="#4873CF"
                       Height="60">
                         <Grid>
                                 <Grid.ColumnDefinitions>
@@ -64,25 +32,19 @@
                                             Orientation="Horizontal"
                                             VerticalAlignment="Center"
                                             Margin="20,0">
-                                        <TextBlock Text="CocoroAI"
+                                        <TextBlock Text="CocoroAI Chat"
                                                    FontSize="24"
-                                                   Foreground="White"
-                                                   FontWeight="SemiBold"/>
-                                        <TextBlock x:Name="StatusTextBlock"
-                                                   Text="  (切断中)"
-                                                   FontSize="14"
                                                    Foreground="WhiteSmoke"
-                                                   VerticalAlignment="Center"
-                                                   Margin="10,0,0,0"/>
+                                                   FontWeight="SemiBold"/>
                                 </StackPanel>
 
                                 <Button x:Name="AdminButton"
                                         Grid.Column="1"
-                                        Content="管理"
+                                        Content="Manage"
                                         Margin="0,0,20,0"
                                         Padding="15,5"
-                                        Background="#005a9e"
-                                        Foreground="White"
+                                        Background="#4873CF"
+                                        Foreground="WhiteSmoke"
                                         BorderThickness="0"
                                         Click="AdminButton_Click"/>
                         </Grid>
@@ -90,7 +52,7 @@
 
                 <!-- メインコンテンツ部分 -->
                 <Grid Grid.Row="1"
-                                Background="White">
+                      Background="White">
                         <controls:ChatControl x:Name="ChatControlInstance"/>
                 </Grid>
 
@@ -101,11 +63,6 @@
                         <StatusBarItem>
                                 <TextBlock x:Name="ConnectionStatusText"
                                            Text="接続状態: 切断中"/>
-                        </StatusBarItem>
-                        <Separator/>
-                        <StatusBarItem>
-                                <TextBlock x:Name="VersionText"
-                                           Text="Version 1.0.0"/>
                         </StatusBarItem>
                 </StatusBar>
         </Grid>
