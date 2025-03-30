@@ -22,6 +22,15 @@ namespace CocoroAIGUI
             mainWindow.Show();
         }
 
+        protected override void OnExit(ExitEventArgs e)
+        {
+            // アプリケーション終了時の処理
+            base.OnExit(e);
+            
+            // 確実にプロセスを終了
+            Environment.Exit(0);
+        }
+
         /// <summary>
         /// 通常スレッドでの未処理例外ハンドラ
         /// </summary>
