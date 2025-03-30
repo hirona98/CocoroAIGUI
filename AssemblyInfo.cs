@@ -1,7 +1,7 @@
 using System.Windows;
 using System.IO;
 
-[assembly:ThemeInfo(
+[assembly: ThemeInfo(
     ResourceDictionaryLocation.None,            //where theme specific resource dictionaries are located
                                                 //(used if a resource is not found in the page,
                                                 // or application resource dictionaries)
@@ -9,6 +9,3 @@ using System.IO;
                                                 //(used if a resource is not found in the page,
                                                 // app, or any theme specific resource dictionaries)
 )]
-
-// log4net設定ファイルを指定
-[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
