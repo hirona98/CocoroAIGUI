@@ -54,20 +54,38 @@
         <Grid Grid.Row="0"
                 Background="#0078D7"
                 Height="60">
-            <StackPanel Orientation="Horizontal"
-                    VerticalAlignment="Center"
-                    Margin="20,0">
-                <TextBlock Text="CocoroAI"
-                        FontSize="24"
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" 
+                          Orientation="Horizontal"
+                          VerticalAlignment="Center"
+                          Margin="20,0">
+                    <TextBlock Text="CocoroAI"
+                            FontSize="24"
+                            Foreground="White"
+                            FontWeight="SemiBold"/>
+                    <TextBlock x:Name="StatusTextBlock"
+                            Text="  (切断中)"
+                            FontSize="14"
+                            Foreground="WhiteSmoke"
+                            VerticalAlignment="Center"
+                            Margin="10,0,0,0"/>
+                </StackPanel>
+                
+                <Button x:Name="AdminButton" 
+                        Grid.Column="1"
+                        Content="管理" 
+                        Margin="0,0,20,0"
+                        Padding="15,5"
+                        Background="#005a9e"
                         Foreground="White"
-                        FontWeight="SemiBold"/>
-                <TextBlock x:Name="StatusTextBlock"
-                        Text="  (切断中)"
-                        FontSize="14"
-                        Foreground="WhiteSmoke"
-                        VerticalAlignment="Center"
-                        Margin="10,0,0,0"/>
-            </StackPanel>
+                        BorderThickness="0"
+                        Click="AdminButton_Click"/>
+            </Grid>
         </Grid>
 
         <!-- メインコンテンツ部分 -->

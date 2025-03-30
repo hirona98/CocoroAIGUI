@@ -378,5 +378,16 @@ namespace CocoroAIGUI
 
             base.OnClosed(e);
         }
+
+        /// <summary>
+        /// 管理ボタンクリック時のイベントハンドラ
+        /// </summary>
+        private void AdminButton_Click(object sender, RoutedEventArgs e)
+        {
+            // 管理画面を表示
+            var adminWindow = new AdminWindow();
+            adminWindow.Owner = this; // メインウィンドウを親に設定
+            adminWindow.ShowDialog(); // モーダルダイアログとして表示
+        }
     }
 }

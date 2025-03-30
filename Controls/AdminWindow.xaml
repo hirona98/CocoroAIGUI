@@ -1,0 +1,283 @@
+﻿<Window x:Class="CocoroAIGUI.Controls.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CocoroAIGUI.Controls"
+        mc:Ignorable="d"
+        Title="管理画面" 
+        Height="550" 
+        Width="800"
+        WindowStartupLocation="CenterOwner">
+    
+    <Window.Resources>
+        <!-- タブスタイル -->
+        <Style x:Key="AdminTabItemStyle" TargetType="TabItem">
+            <Setter Property="Background" Value="#F0F0F0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#666666"/>
+            <Setter Property="Margin" Value="0,0,2,0"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Foreground" Value="#0078D7"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,3"/>
+                    <Setter Property="BorderBrush" Value="#0078D7"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <TabControl BorderThickness="0" Background="White">
+            <TabItem Header="表示設定" Style="{StaticResource AdminTabItemStyle}">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" 
+                               Text="表示設定" 
+                               FontSize="20" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,20"/>
+                    
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- フォントサイズ設定 -->
+                            <GroupBox Header="フォント設定" Margin="0,0,0,20" Padding="10">
+                                <StackPanel>
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="ユーザーメッセージ:" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Column="1" x:Name="UserFontSizeComboBox" Width="100" HorizontalAlignment="Left">
+                                            <ComboBoxItem Content="小 (12pt)" Tag="12"/>
+                                            <ComboBoxItem Content="中 (14pt)" Tag="14" IsSelected="True"/>
+                                            <ComboBoxItem Content="大 (16pt)" Tag="16"/>
+                                        </ComboBox>
+                                    </Grid>
+                                    
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="AIメッセージ:" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Column="1" x:Name="AIFontSizeComboBox" Width="100" HorizontalAlignment="Left">
+                                            <ComboBoxItem Content="小 (12pt)" Tag="12"/>
+                                            <ComboBoxItem Content="中 (14pt)" Tag="14" IsSelected="True"/>
+                                            <ComboBoxItem Content="大 (16pt)" Tag="16"/>
+                                        </ComboBox>
+                                    </Grid>
+                                </StackPanel>
+                            </GroupBox>
+                            
+                            <!-- テーマ設定 -->
+                            <GroupBox Header="テーマ設定" Margin="0,0,0,20" Padding="10">
+                                <StackPanel>
+                                    <RadioButton x:Name="LightThemeRadioButton" 
+                                                Content="ライトテーマ" 
+                                                Margin="0,5" 
+                                                IsChecked="True"/>
+                                    <RadioButton x:Name="DarkThemeRadioButton" 
+                                                Content="ダークテーマ" 
+                                                Margin="0,5"/>
+                                    <RadioButton x:Name="SystemThemeRadioButton" 
+                                                Content="システム設定に合わせる" 
+                                                Margin="0,5"/>
+                                </StackPanel>
+                            </GroupBox>
+                            
+                            <!-- メッセージ表示設定 -->
+                            <GroupBox Header="メッセージ表示設定" Margin="0,0,0,20" Padding="10">
+                                <StackPanel>
+                                    <CheckBox x:Name="ShowTimestampCheckBox" 
+                                             Content="メッセージにタイムスタンプを表示" 
+                                             Margin="0,5"/>
+                                    <CheckBox x:Name="MessageAnimationCheckBox" 
+                                             Content="メッセージ表示アニメーションを有効にする" 
+                                             Margin="0,5" 
+                                             IsChecked="True"/>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                        <Button x:Name="SaveDisplaySettingsButton" 
+                                Content="保存" 
+                                Padding="15,5" 
+                                Margin="0,0,10,0"
+                                Background="#0078D7"
+                                Foreground="White"
+                                Click="SaveDisplaySettingsButton_Click"/>
+                        <Button x:Name="ResetDisplaySettingsButton" 
+                                Content="リセット" 
+                                Padding="15,5"
+                                Click="ResetDisplaySettingsButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <TabItem Header="キャラクター設定" Style="{StaticResource AdminTabItemStyle}">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" 
+                               Text="キャラクター設定" 
+                               FontSize="20" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,20"/>
+                    
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- キャラクター選択 -->
+                            <GroupBox Header="キャラクター選択" Margin="0,0,0,20" Padding="10">
+                                <StackPanel>
+                                    <ComboBox x:Name="CharacterSelectComboBox" 
+                                             Margin="0,5" 
+                                             SelectionChanged="CharacterSelectComboBox_SelectionChanged">
+                                        <ComboBoxItem Content="デフォルト" IsSelected="True"/>
+                                        <ComboBoxItem Content="カスタム1"/>
+                                        <ComboBoxItem Content="カスタム2"/>
+                                    </ComboBox>
+                                    
+                                    <Button x:Name="AddCharacterButton" 
+                                           Content="新しいキャラクターを作成" 
+                                           Margin="0,10" 
+                                           Padding="10,5" 
+                                           HorizontalAlignment="Left"
+                                           Click="AddCharacterButton_Click"/>
+                                </StackPanel>
+                            </GroupBox>
+                            
+                            <!-- キャラクターパラメータ -->
+                            <GroupBox Header="キャラクターパラメータ" Margin="0,0,0,20" Padding="10">
+                                <StackPanel>
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="名前:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" x:Name="CharacterNameTextBox" Margin="0,5"/>
+                                    </Grid>
+                                    
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="性格:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" x:Name="CharacterPersonalityTextBox" Margin="0,5"/>
+                                    </Grid>
+                                    
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="設定:" VerticalAlignment="Top" Margin="0,5,0,0"/>
+                                        <TextBox Grid.Column="1" x:Name="CharacterSettingsTextBox" 
+                                                Margin="0,5" 
+                                                AcceptsReturn="True" 
+                                                TextWrapping="Wrap" 
+                                                Height="100"/>
+                                    </Grid>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                        <Button x:Name="SaveCharacterSettingsButton" 
+                                Content="保存" 
+                                Padding="15,5" 
+                                Margin="0,0,10,0"
+                                Background="#0078D7"
+                                Foreground="White"
+                                Click="SaveCharacterSettingsButton_Click"/>
+                        <Button x:Name="DeleteCharacterButton" 
+                                Content="削除" 
+                                Padding="15,5"
+                                Background="#d32f2f"
+                                Foreground="White"
+                                Click="DeleteCharacterButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <TabItem Header="ライセンス" Style="{StaticResource AdminTabItemStyle}">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" 
+                               Text="ライセンス情報" 
+                               FontSize="20" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,20"/>
+                    
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- ソフトウェアライセンス情報 -->
+                            <GroupBox Header="ソフトウェア情報" Margin="0,0,0,20" Padding="10">
+                                <StackPanel>
+                                    <TextBlock Text="CocoroAI" FontWeight="Bold" FontSize="16" Margin="0,0,0,5"/>
+                                    <TextBlock Text="バージョン: 1.0.0" Margin="0,0,0,5"/>
+                                    <TextBlock Text="© 2025 AliceEncoder All Rights Reserved." Margin="0,0,0,10"/>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,5">
+                                        本ソフトウェアはプライベートライセンスの下で提供されています。
+                                        許可なく再配布することはできません。
+                                    </TextBlock>
+                                </StackPanel>
+                            </GroupBox>
+                            
+                            <!-- 使用ライブラリ情報 -->
+                            <GroupBox Header="使用ライブラリ" Margin="0,0,0,20" Padding="10">
+                                <StackPanel>
+                                    <TextBlock FontWeight="Bold" Margin="0,5">WPF (Windows Presentation Foundation)</TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
+                                        Microsoft .NET Foundationの一部として提供されているUIフレームワークです。
+                                        MITライセンスの下で提供されています。
+                                    </TextBlock>
+                                    
+                                    <TextBlock FontWeight="Bold" Margin="0,5">Newtonsoft.Json</TextBlock>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
+                                        高性能なJSON処理ライブラリです。
+                                        MITライセンスの下で提供されています。
+                                        Copyright (c) 2007 James Newton-King
+                                    </TextBlock>
+                                </StackPanel>
+                            </GroupBox>
+                            
+                            <!-- お問い合わせ -->
+                            <GroupBox Header="お問い合わせ" Margin="0,0,0,20" Padding="10">
+                                <StackPanel>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,5">
+                                        バグ報告やご質問は下記のサポート窓口までお願いします。
+                                    </TextBlock>
+                                    <TextBlock Text="メール: support@example.com" Margin="0,5"/>
+                                    <TextBlock Text="Webサイト: https://example.com/support" Margin="0,5"/>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
