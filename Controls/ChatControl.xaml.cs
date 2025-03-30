@@ -131,13 +131,21 @@ namespace CocoroAIGUI.Controls
         /// <summary>
         /// テキストボックスのキー入力ハンドラ（Enterキーで送信）
         /// </summary>
-        private void MessageTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void MessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            // Enterキーで送信（Shiftキー押下時は改行）
-            if (e.Key == Key.Enter && !Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+            // Enterキーが押された場合
+            if (e.Key == Key.Enter)
             {
-                e.Handled = true;
-                SendMessage();
+                // Shiftキーが押されていない場合は送信処理
+                if ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.Shift)
+                {
+                    // Enterキーのデフォルト動作（改行）を防止
+                    e.Handled = true;
+
+                    // 送信処理を実行
+                    SendMessage();
+                }
+                // Shift+Enterの場合はデフォルト動作（改行）をそのまま許可
             }
         }
     }
