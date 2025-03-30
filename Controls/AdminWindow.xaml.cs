@@ -12,12 +12,17 @@ namespace CocoroAIGUI.Controls
     {
         // 表示設定を保存するための辞書
         private Dictionary<string, object> _displaySettings = new Dictionary<string, object>();
+        private Dictionary<string, object> _originalDisplaySettings = new Dictionary<string, object>();
 
         // キャラクター設定を保存するための辞書のリスト
         private List<Dictionary<string, string>> _characterSettings = new List<Dictionary<string, string>>();
+        private List<Dictionary<string, string>> _originalCharacterSettings = new List<Dictionary<string, string>>();
 
         // 現在選択されているキャラクターのインデックス
         private int _currentCharacterIndex = 0;
+
+        // 設定が変更されたかどうかを追跡するフラグ
+        private bool _settingsChanged = false;
 
         public AdminWindow()
         {
@@ -28,6 +33,9 @@ namespace CocoroAIGUI.Controls
 
             // キャラクター設定の初期化
             InitializeCharacterSettings();
+
+            // 元の設定のバックアップを作成
+            BackupSettings();
         }
 
         #region 初期化メソッド
@@ -89,6 +97,22 @@ namespace CocoroAIGUI.Controls
         }
 
         /// <summary>
+        /// 現在の設定をバックアップする
+        /// </summary>
+        private void BackupSettings()
+        {
+            // 表示設定のバックアップ
+            _originalDisplaySettings = new Dictionary<string, object>(_displaySettings);
+
+            // キャラクター設定のディープコピー
+            _originalCharacterSettings = new List<Dictionary<string, string>>();
+            foreach (var character in _characterSettings)
+            {
+                _originalCharacterSettings.Add(new Dictionary<string, string>(character));
+            }
+        }
+
+        /// <summary>
         /// キャラクター情報をUIに反映
         /// </summary>
         private void UpdateCharacterUI(int index)
@@ -104,69 +128,6 @@ namespace CocoroAIGUI.Controls
 
         #endregion
 
-        #region 表示設定イベントハンドラ
-
-        /// <summary>
-        /// 表示設定保存ボタンのクリックイベントハンドラ
-        /// </summary>
-        private void SaveDisplaySettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            // コンボボックスから選択された値を取得
-            var userFontSizeItem = UserFontSizeComboBox.SelectedItem as ComboBoxItem;
-            var aiFontSizeItem = AIFontSizeComboBox.SelectedItem as ComboBoxItem;
-
-            if (userFontSizeItem != null && aiFontSizeItem != null)
-            {
-                // タグからフォントサイズを取得
-                _displaySettings["UserFontSize"] = Convert.ToInt32(userFontSizeItem.Tag);
-                _displaySettings["AIFontSize"] = Convert.ToInt32(aiFontSizeItem.Tag);
-            }
-
-            // テーマ設定を取得
-            if (LightThemeRadioButton.IsChecked == true)
-                _displaySettings["Theme"] = "Light";
-            else if (DarkThemeRadioButton.IsChecked == true)
-                _displaySettings["Theme"] = "Dark";
-            else if (SystemThemeRadioButton.IsChecked == true)
-                _displaySettings["Theme"] = "System";
-
-            // その他の設定を取得
-            _displaySettings["ShowTimestamp"] = ShowTimestampCheckBox.IsChecked ?? false;
-            _displaySettings["MessageAnimation"] = MessageAnimationCheckBox.IsChecked ?? true;
-
-            // 設定保存の処理
-            SaveDisplaySettings();
-
-            MessageBox.Show("表示設定を保存しました。", "保存完了", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        /// <summary>
-        /// 表示設定リセットボタンのクリックイベントハンドラ
-        /// </summary>
-        private void ResetDisplaySettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            // 確認ダイアログを表示
-            var result = MessageBox.Show("表示設定をデフォルトに戻しますか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                // 設定を初期化
-                InitializeDisplaySettings();
-                MessageBox.Show("表示設定をリセットしました。", "リセット完了", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        /// <summary>
-        /// 表示設定を保存する
-        /// </summary>
-        private void SaveDisplaySettings()
-        {
-            // TODO: 設定ファイルへの保存処理を実装
-            // 実際の実装では設定ファイルに保存する処理を追加
-        }
-
-        #endregion
-
         #region キャラクター設定イベントハンドラ
 
         /// <summary>
@@ -174,6 +135,10 @@ namespace CocoroAIGUI.Controls
         /// </summary>
         private void CharacterSelectComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // 現在のキャラクター設定を保存
+            SaveCurrentCharacterToMemory();
+
+            // 新しいキャラクターのUIを更新
             int selectedIndex = CharacterSelectComboBox.SelectedIndex;
             if (selectedIndex >= 0)
             {
@@ -186,7 +151,10 @@ namespace CocoroAIGUI.Controls
         /// </summary>
         private void AddCharacterButton_Click(object sender, RoutedEventArgs e)
         {
-            // 新しいキャラクターの名前を入力するダイアログ
+            // 現在のキャラクター設定を保存
+            SaveCurrentCharacterToMemory();
+
+            // 新しいキャラクターの名前を設定
             var newName = "新しいキャラクター" + (_characterSettings.Count + 1);
 
             // 新しいキャラクター設定を作成
@@ -206,39 +174,9 @@ namespace CocoroAIGUI.Controls
 
             // 新しいキャラクターを選択
             CharacterSelectComboBox.SelectedIndex = _characterSettings.Count - 1;
-        }
 
-        /// <summary>
-        /// キャラクター設定保存ボタンのクリックイベントハンドラ
-        /// </summary>
-        private void SaveCharacterSettingsButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_currentCharacterIndex >= 0 && _currentCharacterIndex < _characterSettings.Count)
-            {
-                // UIから値を取得して設定を更新
-                var name = CharacterNameTextBox.Text;
-                var personality = CharacterPersonalityTextBox.Text;
-                var settings = CharacterSettingsTextBox.Text;
-
-                _characterSettings[_currentCharacterIndex]["Name"] = name;
-                _characterSettings[_currentCharacterIndex]["Personality"] = personality;
-                _characterSettings[_currentCharacterIndex]["Settings"] = settings;
-
-                // コンボボックスの表示も更新
-                if (_currentCharacterIndex < CharacterSelectComboBox.Items.Count)
-                {
-                    var item = CharacterSelectComboBox.Items[_currentCharacterIndex] as ComboBoxItem;
-                    if (item != null)
-                    {
-                        item.Content = name;
-                    }
-                }
-
-                // 設定保存の処理
-                SaveCharacterSettings();
-
-                MessageBox.Show("キャラクター設定を保存しました。", "保存完了", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            // 設定変更フラグを設定
+            _settingsChanged = true;
         }
 
         /// <summary>
@@ -266,11 +204,154 @@ namespace CocoroAIGUI.Controls
                 // デフォルトキャラクターを選択
                 CharacterSelectComboBox.SelectedIndex = 0;
 
-                // 設定保存の処理
-                SaveCharacterSettings();
-
-                MessageBox.Show("キャラクターを削除しました。", "削除完了", MessageBoxButton.OK, MessageBoxImage.Information);
+                // 設定変更フラグを設定
+                _settingsChanged = true;
             }
+        }
+
+        /// <summary>
+        /// 現在のキャラクター設定をメモリに保存
+        /// </summary>
+        private void SaveCurrentCharacterToMemory()
+        {
+            if (_currentCharacterIndex >= 0 && _currentCharacterIndex < _characterSettings.Count)
+            {
+                // UIから値を取得して設定を更新
+                var name = CharacterNameTextBox.Text;
+                var personality = CharacterPersonalityTextBox.Text;
+                var settings = CharacterSettingsTextBox.Text;
+
+                // 値が変更された場合のみ更新
+                if (_characterSettings[_currentCharacterIndex]["Name"] != name ||
+                    _characterSettings[_currentCharacterIndex]["Personality"] != personality ||
+                    _characterSettings[_currentCharacterIndex]["Settings"] != settings)
+                {
+                    _characterSettings[_currentCharacterIndex]["Name"] = name;
+                    _characterSettings[_currentCharacterIndex]["Personality"] = personality;
+                    _characterSettings[_currentCharacterIndex]["Settings"] = settings;
+
+                    // コンボボックスの表示も更新
+                    if (_currentCharacterIndex < CharacterSelectComboBox.Items.Count)
+                    {
+                        var item = CharacterSelectComboBox.Items[_currentCharacterIndex] as ComboBoxItem;
+                        if (item != null)
+                        {
+                            item.Content = name;
+                        }
+                    }
+
+                    // 設定変更フラグを設定
+                    _settingsChanged = true;
+                }
+            }
+        }
+
+        #endregion
+
+        #region 共通ボタンイベントハンドラ
+
+        /// <summary>
+        /// OKボタンのクリックイベントハンドラ
+        /// </summary>
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            // すべてのタブの設定を保存
+            SaveAllSettings();
+
+            // ウィンドウを閉じる
+            DialogResult = true;
+            Close();
+        }
+
+        /// <summary>
+        /// キャンセルボタンのクリックイベントハンドラ
+        /// </summary>
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            // 設定が変更されていた場合は確認ダイアログを表示
+            if (_settingsChanged)
+            {
+                var result = MessageBox.Show("変更した設定は保存されません。よろしいですか？",
+                    "確認", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.No)
+                {
+                    return;
+                }
+            }
+
+            // 変更を破棄して元の設定に戻す
+            RestoreOriginalSettings();
+
+            // ウィンドウを閉じる
+            DialogResult = false;
+            Close();
+        }
+
+        /// <summary>
+        /// すべてのタブの設定を保存する
+        /// </summary>
+        private void SaveAllSettings()
+        {
+            // 表示設定タブの設定を保存
+            SaveDisplaySettings();
+
+            // 現在のキャラクター設定をメモリに保存してからキャラクター設定を保存
+            SaveCurrentCharacterToMemory();
+            SaveCharacterSettings();
+
+            MessageBox.Show("すべての設定を保存しました。", "保存完了", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        /// <summary>
+        /// 元の設定に戻す
+        /// </summary>
+        private void RestoreOriginalSettings()
+        {
+            // 設定をバックアップから復元
+            _displaySettings = new Dictionary<string, object>(_originalDisplaySettings);
+
+            _characterSettings.Clear();
+            foreach (var character in _originalCharacterSettings)
+            {
+                _characterSettings.Add(new Dictionary<string, string>(character));
+            }
+        }
+
+        #endregion
+
+        #region 設定保存メソッド
+
+        /// <summary>
+        /// 表示設定を保存する
+        /// </summary>
+        private void SaveDisplaySettings()
+        {
+            // コンボボックスから選択された値を取得
+            var userFontSizeItem = UserFontSizeComboBox.SelectedItem as ComboBoxItem;
+            var aiFontSizeItem = AIFontSizeComboBox.SelectedItem as ComboBoxItem;
+
+            if (userFontSizeItem != null && aiFontSizeItem != null)
+            {
+                // タグからフォントサイズを取得
+                _displaySettings["UserFontSize"] = Convert.ToInt32(userFontSizeItem.Tag);
+                _displaySettings["AIFontSize"] = Convert.ToInt32(aiFontSizeItem.Tag);
+            }
+
+            // テーマ設定を取得
+            if (LightThemeRadioButton.IsChecked == true)
+                _displaySettings["Theme"] = "Light";
+            else if (DarkThemeRadioButton.IsChecked == true)
+                _displaySettings["Theme"] = "Dark";
+            else if (SystemThemeRadioButton.IsChecked == true)
+                _displaySettings["Theme"] = "System";
+
+            // その他の設定を取得
+            _displaySettings["ShowTimestamp"] = ShowTimestampCheckBox.IsChecked ?? false;
+            _displaySettings["MessageAnimation"] = MessageAnimationCheckBox.IsChecked ?? true;
+
+            // TODO: 設定ファイルへの保存処理を実装
+            // 実際の実装では設定ファイルに保存する処理を追加
         }
 
         /// <summary>
