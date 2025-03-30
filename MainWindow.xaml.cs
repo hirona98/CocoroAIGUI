@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows;
 using System.Threading.Tasks;
+using System.Windows;
 using CocoroAIGUI.Controls;
-using CocoroAIGUI.Services;
 using CocoroAIGUI.Communication;
+using CocoroAIGUI.Services;
 
 namespace CocoroAIGUI
 {
@@ -14,14 +13,12 @@ namespace CocoroAIGUI
     public partial class MainWindow : Window
     {
         private CommunicationService? _communicationService;
-        private string _currentUserId = "user01";
-        private string _currentWebSocketUrl = "ws://127.0.0.1:8080/";
 
         public MainWindow()
         {
             InitializeComponent();
 
-            // 初期化
+            // 初期化と接続
             InitializeApp();
 
             // イベントハンドラ登録
@@ -33,30 +30,40 @@ namespace CocoroAIGUI
         /// </summary>
         private void InitializeApp()
         {
-            // 通信サービスを初期化（まだ接続はしない）
-            _communicationService = new CommunicationService(_currentWebSocketUrl, _currentUserId);
+            try
+            {
+                // AppSettingsから設定を取得
+                var settings = AppSettings.Instance;
 
-            // 通信サービスのイベントハンドラを設定
-            _communicationService.ChatMessageReceived += OnChatMessageReceived;
-            _communicationService.ConfigResponseReceived += OnConfigResponseReceived;
-            _communicationService.StatusUpdateReceived += OnStatusUpdateReceived;
-            _communicationService.ErrorOccurred += OnErrorOccurred;
-            _communicationService.Connected += OnConnected;
-            _communicationService.Disconnected += OnDisconnected;
+                // 通信サービスを初期化
+                _communicationService = new CommunicationService(settings.WebSocketUrl, settings.UserId);
 
-            // 接続
-            ConnectToService();
+                // 通信サービスのイベントハンドラを設定
+                _communicationService.ChatMessageReceived += OnChatMessageReceived;
+                _communicationService.ConfigResponseReceived += OnConfigResponseReceived;
+                _communicationService.StatusUpdateReceived += OnStatusUpdateReceived;
+                _communicationService.ErrorOccurred += OnErrorOccurred;
+                _communicationService.Connected += OnConnected;
+                _communicationService.Disconnected += OnDisconnected;
+
+                // 接続
+                _ = ConnectToServiceAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"初期化エラー: {ex.Message}", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>
-        /// サービスに接続
+        /// サービスに接続（非同期タスク）
         /// </summary>
-        private async void ConnectToService()
+        private async Task ConnectToServiceAsync()
         {
             try
             {
-                StatusTextBlock.Text = "  (接続中...)";
-                ConnectionStatusText.Text = "接続状態: 接続中...";
+                // UI更新
+                UpdateConnectionStatus(false, "接続中...");
 
                 if (_communicationService != null)
                 {
@@ -65,9 +72,9 @@ namespace CocoroAIGUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"接続エラー: {ex.Message}", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
-                StatusTextBlock.Text = "  (切断中)";
-                ConnectionStatusText.Text = "接続状態: 切断中";
+                // UI更新とエラー表示
+                ShowError("接続エラー", ex.Message);
+                UpdateConnectionStatus(false);
             }
         }
 
@@ -78,6 +85,57 @@ namespace CocoroAIGUI
         {
             // チャットコントロールのイベント登録
             ChatControlInstance.MessageSent += OnChatMessageSent;
+        }
+
+        /// <summary>
+        /// 接続ステータス表示を更新
+        /// </summary>
+        private void UpdateConnectionStatus(bool isConnected, string? customMessage = null)
+        {
+            // UIスレッドで実行
+            RunOnUIThread(() =>
+            {
+                if (isConnected)
+                {
+                    StatusTextBlock.Text = "  (接続中)";
+                    ConnectionStatusText.Text = "接続状態: 接続中";
+                }
+                else
+                {
+                    string statusText = customMessage ?? "切断中";
+                    StatusTextBlock.Text = $"  ({statusText})";
+                    ConnectionStatusText.Text = $"接続状態: {statusText}";
+                }
+            });
+        }
+
+        /// <summary>
+        /// エラーをメッセージボックスで表示
+        /// </summary>
+        private void ShowError(string title, string message)
+        {
+            RunOnUIThread(() =>
+            {
+                MessageBox.Show($"{title}: {message}", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+            });
+        }
+
+        /// <summary>
+        /// UIスレッドでアクションを実行
+        /// </summary>
+        private void RunOnUIThread(Action action)
+        {
+            if (Application.Current?.Dispatcher != null)
+            {
+                if (Application.Current.Dispatcher.CheckAccess())
+                {
+                    action();
+                }
+                else
+                {
+                    Application.Current.Dispatcher.Invoke(action);
+                }
+            }
         }
 
         #region チャットコントロールイベントハンドラ
@@ -114,11 +172,7 @@ namespace CocoroAIGUI
         /// </summary>
         private void OnChatMessageReceived(object? sender, string message)
         {
-            // UIスレッドで実行
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ChatControlInstance.AddAiMessage(message);
-            });
+            RunOnUIThread(() => ChatControlInstance.AddAiMessage(message));
         }
 
         /// <summary>
@@ -126,8 +180,7 @@ namespace CocoroAIGUI
         /// </summary>
         private void OnConfigResponseReceived(object? sender, ConfigResponsePayload response)
         {
-            // UIスレッドで実行
-            Application.Current.Dispatcher.Invoke(() =>
+            RunOnUIThread(() => 
             {
                 if (response.Status.ToLower() != "ok")
                 {
@@ -141,7 +194,7 @@ namespace CocoroAIGUI
         /// </summary>
         private void OnStatusUpdateReceived(object? sender, StatusMessagePayload status)
         {
-            // 必要なステータス処理はここに記述
+            // 必要なステータス処理を実装する場合はここに追加
         }
 
         /// <summary>
@@ -149,11 +202,7 @@ namespace CocoroAIGUI
         /// </summary>
         private void OnErrorOccurred(object? sender, string error)
         {
-            // UIスレッドで実行
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                MessageBox.Show($"エラー: {error}", "通信エラー", MessageBoxButton.OK, MessageBoxImage.Error);
-            });
+            ShowError("通信エラー", error);
         }
 
         /// <summary>
@@ -161,12 +210,7 @@ namespace CocoroAIGUI
         /// </summary>
         private void OnConnected(object? sender, EventArgs e)
         {
-            // UIスレッドで実行
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                StatusTextBlock.Text = "  (接続中)";
-                ConnectionStatusText.Text = "接続状態: 接続中";
-            });
+            UpdateConnectionStatus(true);
         }
 
         /// <summary>
@@ -174,12 +218,7 @@ namespace CocoroAIGUI
         /// </summary>
         private void OnDisconnected(object? sender, EventArgs e)
         {
-            // UIスレッドで実行
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                StatusTextBlock.Text = "  (切断中)";
-                ConnectionStatusText.Text = "接続状態: 切断中";
-            });
+            UpdateConnectionStatus(false);
         }
 
         #endregion
@@ -189,24 +228,25 @@ namespace CocoroAIGUI
         /// </summary>
         protected override void OnClosed(EventArgs e)
         {
-            // 接続中ならタイムアウト付きで切断処理
-            if (_communicationService != null)
+            try
             {
-                try
+                // 接続中ならリソース解放
+                if (_communicationService != null)
                 {
-                    // 切断処理を行うが待機せずに進む
                     _communicationService.Dispose();
+                    _communicationService = null;
                 }
-                catch (Exception)
-                {
-                    // 切断中のエラーは無視
-                }
+            }
+            catch (Exception)
+            {
+                // 切断中のエラーは無視
             }
 
             base.OnClosed(e);
             
-            // アプリケーションを完全に終了（強制終了）
-            Environment.Exit(0);
+            // Application.Current.ShutdownだけでOK
+            // OnExitが自動的に実行される
+            Application.Current.Shutdown();
         }
 
         /// <summary>
