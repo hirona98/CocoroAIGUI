@@ -103,15 +103,17 @@
                         <Border Grid.Column="0"
                                 BorderBrush="#CCCCCC"
                                 BorderThickness="1"
-                                CornerRadius="18">
+                                CornerRadius="5">
                                 <TextBox x:Name="MessageTextBox"
-                                         Height="36"
+                                         Height="55"
+                                         MinHeight="55"
+                                         MaxHeight="180"
                                          Padding="10,8,10,8"
                                          FontSize="14"
                                          BorderThickness="0"
                                          Background="Transparent"
-                                         VerticalContentAlignment="Center"
-                                         PreviewKeyDown="MessageTextBox_PreviewKeyDown"
+                                         VerticalContentAlignment="Top"
+                                         PreviewKeyDown="MessageTextBox_KeyDown"
                                          TextWrapping="Wrap"
                                          MaxLength="1000"
                                          AcceptsReturn="True"/>
@@ -121,7 +123,7 @@
                                 Grid.Column="1"
                                 Content="送信"
                                 Width="60"
-                                Height="36"
+                                Height="55"
                                 Margin="5,0,0,0"
                                 Click="SendButton_Click"
                                 Background="#0078D7"
@@ -131,7 +133,7 @@
                                 <Button.Resources>
                                         <Style TargetType="Border">
                                                 <Setter Property="CornerRadius"
-                                                        Value="18"/>
+                                                        Value="5"/>
                                         </Style>
                                 </Button.Resources>
                         </Button>
