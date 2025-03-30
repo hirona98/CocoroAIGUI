@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using CocoroAIGUI.Controls;
@@ -180,7 +180,7 @@ namespace CocoroAIGUI
         /// </summary>
         private void OnConfigResponseReceived(object? sender, ConfigResponsePayload response)
         {
-            RunOnUIThread(() => 
+            RunOnUIThread(() =>
             {
                 if (response.Status.ToLower() != "ok")
                 {
@@ -243,7 +243,7 @@ namespace CocoroAIGUI
             }
 
             base.OnClosed(e);
-            
+
             // Application.Current.ShutdownだけでOK
             // OnExitが自動的に実行される
             Application.Current.Shutdown();

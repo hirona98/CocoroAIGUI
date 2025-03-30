@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Threading;
 using System.Threading.Tasks;
@@ -10,7 +10,7 @@ namespace CocoroAIGUI
     /// </summary>
     public partial class App : Application
     {
-        private static readonly log4net.ILog _logger = 
+        private static readonly log4net.ILog _logger =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
 
         protected override void OnStartup(StartupEventArgs e)
@@ -49,10 +49,10 @@ namespace CocoroAIGUI
         {
             // 致命的ではないエラーとして処理
             LogError(e.Exception, "UIスレッドでの未処理例外");
-            
-            MessageBox.Show($"エラーが発生しました: {e.Exception.Message}", 
+
+            MessageBox.Show($"エラーが発生しました: {e.Exception.Message}",
                 "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
-            
+
             // 例外を処理済みとしてマーク（アプリケーションを継続）
             e.Handled = true;
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,20 +12,20 @@ namespace CocoroAIGUI.Controls
     {
         // 表示設定を保存するための辞書
         private Dictionary<string, object> _displaySettings = new Dictionary<string, object>();
-        
+
         // キャラクター設定を保存するための辞書のリスト
         private List<Dictionary<string, string>> _characterSettings = new List<Dictionary<string, string>>();
-        
+
         // 現在選択されているキャラクターのインデックス
         private int _currentCharacterIndex = 0;
 
         public AdminWindow()
         {
             InitializeComponent();
-            
+
             // 表示設定の初期化
             InitializeDisplaySettings();
-            
+
             // キャラクター設定の初期化
             InitializeCharacterSettings();
         }
@@ -45,7 +45,7 @@ namespace CocoroAIGUI.Controls
                 { "ShowTimestamp", false },
                 { "MessageAnimation", true }
             };
-            
+
             // 設定値をUIに反映
             UserFontSizeComboBox.SelectedIndex = 1; // 中(14pt)
             AIFontSizeComboBox.SelectedIndex = 1; // 中(14pt)
@@ -83,7 +83,7 @@ namespace CocoroAIGUI.Controls
                     { "Settings", "事実に基づいた回答を提供し、客観的な視点を保ちます。" }
                 }
             };
-            
+
             // 初期キャラクターの設定をUIに反映
             UpdateCharacterUI(0);
         }
@@ -114,14 +114,14 @@ namespace CocoroAIGUI.Controls
             // コンボボックスから選択された値を取得
             var userFontSizeItem = UserFontSizeComboBox.SelectedItem as ComboBoxItem;
             var aiFontSizeItem = AIFontSizeComboBox.SelectedItem as ComboBoxItem;
-            
+
             if (userFontSizeItem != null && aiFontSizeItem != null)
             {
                 // タグからフォントサイズを取得
                 _displaySettings["UserFontSize"] = Convert.ToInt32(userFontSizeItem.Tag);
                 _displaySettings["AIFontSize"] = Convert.ToInt32(aiFontSizeItem.Tag);
             }
-            
+
             // テーマ設定を取得
             if (LightThemeRadioButton.IsChecked == true)
                 _displaySettings["Theme"] = "Light";
@@ -129,14 +129,14 @@ namespace CocoroAIGUI.Controls
                 _displaySettings["Theme"] = "Dark";
             else if (SystemThemeRadioButton.IsChecked == true)
                 _displaySettings["Theme"] = "System";
-            
+
             // その他の設定を取得
             _displaySettings["ShowTimestamp"] = ShowTimestampCheckBox.IsChecked ?? false;
             _displaySettings["MessageAnimation"] = MessageAnimationCheckBox.IsChecked ?? true;
-            
+
             // 設定保存の処理
             SaveDisplaySettings();
-            
+
             MessageBox.Show("表示設定を保存しました。", "保存完了", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -147,7 +147,7 @@ namespace CocoroAIGUI.Controls
         {
             // 確認ダイアログを表示
             var result = MessageBox.Show("表示設定をデフォルトに戻しますか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            
+
             if (result == MessageBoxResult.Yes)
             {
                 // 設定を初期化
@@ -188,7 +188,7 @@ namespace CocoroAIGUI.Controls
         {
             // 新しいキャラクターの名前を入力するダイアログ
             var newName = "新しいキャラクター" + (_characterSettings.Count + 1);
-            
+
             // 新しいキャラクター設定を作成
             var newCharacter = new Dictionary<string, string>
             {
@@ -196,14 +196,14 @@ namespace CocoroAIGUI.Controls
                 { "Personality", "" },
                 { "Settings", "" }
             };
-            
+
             // リストに追加
             _characterSettings.Add(newCharacter);
-            
+
             // コンボボックスに項目を追加
             var newItem = new ComboBoxItem { Content = newName };
             CharacterSelectComboBox.Items.Add(newItem);
-            
+
             // 新しいキャラクターを選択
             CharacterSelectComboBox.SelectedIndex = _characterSettings.Count - 1;
         }
@@ -219,11 +219,11 @@ namespace CocoroAIGUI.Controls
                 var name = CharacterNameTextBox.Text;
                 var personality = CharacterPersonalityTextBox.Text;
                 var settings = CharacterSettingsTextBox.Text;
-                
+
                 _characterSettings[_currentCharacterIndex]["Name"] = name;
                 _characterSettings[_currentCharacterIndex]["Personality"] = personality;
                 _characterSettings[_currentCharacterIndex]["Settings"] = settings;
-                
+
                 // コンボボックスの表示も更新
                 if (_currentCharacterIndex < CharacterSelectComboBox.Items.Count)
                 {
@@ -233,10 +233,10 @@ namespace CocoroAIGUI.Controls
                         item.Content = name;
                     }
                 }
-                
+
                 // 設定保存の処理
                 SaveCharacterSettings();
-                
+
                 MessageBox.Show("キャラクター設定を保存しました。", "保存完了", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -252,23 +252,23 @@ namespace CocoroAIGUI.Controls
                 MessageBox.Show("デフォルトキャラクターは削除できません。", "削除不可", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            
+
             // 確認ダイアログを表示
             var name = _characterSettings[_currentCharacterIndex]["Name"];
             var result = MessageBox.Show($"キャラクター「{name}」を削除しますか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            
+
             if (result == MessageBoxResult.Yes)
             {
                 // キャラクター設定を削除
                 _characterSettings.RemoveAt(_currentCharacterIndex);
                 CharacterSelectComboBox.Items.RemoveAt(_currentCharacterIndex);
-                
+
                 // デフォルトキャラクターを選択
                 CharacterSelectComboBox.SelectedIndex = 0;
-                
+
                 // 設定保存の処理
                 SaveCharacterSettings();
-                
+
                 MessageBox.Show("キャラクターを削除しました。", "削除完了", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
