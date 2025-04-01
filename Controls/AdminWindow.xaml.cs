@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -47,19 +46,11 @@ namespace CocoroAIGUI.Controls
         {
             _displaySettings = new Dictionary<string, object>
             {
-                { "UserFontSize", 14 },
-                { "AIFontSize", 14 },
-                { "Theme", "Light" },
-                { "ShowTimestamp", false },
-                { "MessageAnimation", true }
+                { "TopMost", false },
+                { "EscapeCursor", true }
             };
-
-            // 設定値をUIに反映
-            UserFontSizeComboBox.SelectedIndex = 1; // 中(14pt)
-            AIFontSizeComboBox.SelectedIndex = 1; // 中(14pt)
-            LightThemeRadioButton.IsChecked = true;
-            ShowTimestampCheckBox.IsChecked = false;
-            MessageAnimationCheckBox.IsChecked = true;
+            TopMostCheckBox.IsChecked = false;
+            EscapeCursorCheckBox.IsChecked = true;
         }
 
         /// <summary>
@@ -327,28 +318,8 @@ namespace CocoroAIGUI.Controls
         /// </summary>
         private void SaveDisplaySettings()
         {
-            // コンボボックスから選択された値を取得
-            var userFontSizeItem = UserFontSizeComboBox.SelectedItem as ComboBoxItem;
-            var aiFontSizeItem = AIFontSizeComboBox.SelectedItem as ComboBoxItem;
-
-            if (userFontSizeItem != null && aiFontSizeItem != null)
-            {
-                // タグからフォントサイズを取得
-                _displaySettings["UserFontSize"] = Convert.ToInt32(userFontSizeItem.Tag);
-                _displaySettings["AIFontSize"] = Convert.ToInt32(aiFontSizeItem.Tag);
-            }
-
-            // テーマ設定を取得
-            if (LightThemeRadioButton.IsChecked == true)
-                _displaySettings["Theme"] = "Light";
-            else if (DarkThemeRadioButton.IsChecked == true)
-                _displaySettings["Theme"] = "Dark";
-            else if (SystemThemeRadioButton.IsChecked == true)
-                _displaySettings["Theme"] = "System";
-
-            // その他の設定を取得
-            _displaySettings["ShowTimestamp"] = ShowTimestampCheckBox.IsChecked ?? false;
-            _displaySettings["MessageAnimation"] = MessageAnimationCheckBox.IsChecked ?? true;
+            _displaySettings["TopMost"] = TopMostCheckBox.IsChecked ?? false;
+            _displaySettings["EscapeCursor"] = EscapeCursorCheckBox.IsChecked ?? true;
 
             // TODO: 設定ファイルへの保存処理を実装
             // 実際の実装では設定ファイルに保存する処理を追加

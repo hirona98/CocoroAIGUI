@@ -52,106 +52,23 @@
                     BorderThickness="0"
                     Background="White"
                     Grid.Row="0">
+            
             <TabItem Header="表示設定"
                      Style="{StaticResource AdminTabItemStyle}">
                 <Grid Margin="20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0"
-                               Text="表示設定"
-                               FontSize="20"
-                               FontWeight="SemiBold"
-                               Margin="0,0,0,20"/>
-
-                    <ScrollViewer Grid.Row="1"
+                    <ScrollViewer Grid.Row="0"
                                   VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <!-- フォントサイズ設定 -->
-                            <GroupBox Header="フォント設定"
-                                      Margin="0,0,0,20"
-                                      Padding="10">
-                                <StackPanel>
-                                    <Grid Margin="0,5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0"
-                                                   Text="ユーザーメッセージ:"
-                                                   VerticalAlignment="Center"/>
-                                        <ComboBox Grid.Column="1"
-                                                  x:Name="UserFontSizeComboBox"
-                                                  Width="100"
-                                                  HorizontalAlignment="Left">
-                                            <ComboBoxItem Content="小 (12pt)"
-                                                          Tag="12"/>
-                                            <ComboBoxItem Content="中 (14pt)"
-                                                          Tag="14"
-                                                          IsSelected="True"/>
-                                            <ComboBoxItem Content="大 (16pt)"
-                                                          Tag="16"/>
-                                        </ComboBox>
-                                    </Grid>
-
-                                    <Grid Margin="0,5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="150"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0"
-                                                   Text="AIメッセージ:"
-                                                   VerticalAlignment="Center"/>
-                                        <ComboBox Grid.Column="1"
-                                                  x:Name="AIFontSizeComboBox"
-                                                  Width="100"
-                                                  HorizontalAlignment="Left">
-                                            <ComboBoxItem Content="小 (12pt)"
-                                                          Tag="12"/>
-                                            <ComboBoxItem Content="中 (14pt)"
-                                                          Tag="14"
-                                                          IsSelected="True"/>
-                                            <ComboBoxItem Content="大 (16pt)"
-                                                          Tag="16"/>
-                                        </ComboBox>
-                                    </Grid>
-                                </StackPanel>
-                            </GroupBox>
-
-                            <!-- テーマ設定 -->
-                            <GroupBox Header="テーマ設定"
-                                      Margin="0,0,0,20"
-                                      Padding="10">
-                                <StackPanel>
-                                    <RadioButton x:Name="LightThemeRadioButton"
-                                                 Content="ライトテーマ"
-                                                 Margin="0,5"
-                                                 IsChecked="True"/>
-                                    <RadioButton x:Name="DarkThemeRadioButton"
-                                                 Content="ダークテーマ"
-                                                 Margin="0,5"/>
-                                    <RadioButton x:Name="SystemThemeRadioButton"
-                                                 Content="システム設定に合わせる"
-                                                 Margin="0,5"/>
-                                </StackPanel>
-                            </GroupBox>
-
-                            <!-- メッセージ表示設定 -->
-                            <GroupBox Header="メッセージ表示設定"
-                                      Margin="0,0,0,20"
-                                      Padding="10">
-                                <StackPanel>
-                                    <CheckBox x:Name="ShowTimestampCheckBox"
-                                              Content="メッセージにタイムスタンプを表示"
-                                              Margin="0,5"/>
-                                    <CheckBox x:Name="MessageAnimationCheckBox"
-                                              Content="メッセージ表示アニメーションを有効にする"
-                                              Margin="0,5"
-                                              IsChecked="True"/>
-                                </StackPanel>
-                            </GroupBox>
+                            <CheckBox x:Name="TopMostCheckBox"
+                                        Content="最前面に表示"
+                                        Margin="0,5"/>
+                            <CheckBox x:Name="EscapeCursorCheckBox"
+                                        Content="カーソルから逃げる"
+                                        Margin="0,5" ToolTip="Escape cursor"/>
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
