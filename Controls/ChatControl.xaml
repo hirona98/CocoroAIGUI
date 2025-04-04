@@ -17,11 +17,7 @@
                 <Style x:Key="UserBubbleStyle"
                        TargetType="Border">
                         <Setter Property="Background"
-                                Value="#FFFFFF"/>
-                        <Setter Property="BorderBrush"
-                                Value="#CCCCCC"/>
-                        <Setter Property="BorderThickness"
-                                Value="1"/>
+                                Value="#4873CF"/>
                         <Setter Property="CornerRadius"
                                 Value="10,10,0,10"/>
                         <Setter Property="Padding"
@@ -37,11 +33,7 @@
                 <Style x:Key="AiBubbleStyle"
                        TargetType="Border">
                         <Setter Property="Background"
-                                Value="#FFFFFF"/>
-                        <Setter Property="BorderBrush"
-                                Value="#CCCCCC"/>
-                        <Setter Property="BorderThickness"
-                                Value="1"/>
+                                Value="#b5c7eb"/>
                         <Setter Property="CornerRadius"
                                 Value="10,10,10,0"/>
                         <Setter Property="Padding"
@@ -55,7 +47,16 @@
                 </Style>
 
                 <!-- メッセージテキストスタイル -->
-                <Style x:Key="MessageTextStyle"
+                <Style x:Key="UserMessageTextStyle"
+                       TargetType="TextBlock">
+                        <Setter Property="TextWrapping"
+                                Value="Wrap"/>
+                        <Setter Property="FontSize"
+                                Value="14"/>
+                        <Setter Property="Foreground"
+                                Value="WhiteSmoke"/>
+                </Style>
+                <Style x:Key="AiMessageTextStyle"
                        TargetType="TextBlock">
                         <Setter Property="TextWrapping"
                                 Value="Wrap"/>
@@ -64,14 +65,25 @@
                         <Setter Property="Foreground"
                                 Value="#333333"/>
                 </Style>
-
+            
                 <!-- タイムスタンプスタイル -->
-                <Style x:Key="TimestampStyle"
+                <Style x:Key="UserTimestampStyle"
                        TargetType="TextBlock">
                         <Setter Property="FontSize"
                                 Value="10"/>
                         <Setter Property="Foreground"
-                                Value="#888888"/>
+                                Value="#cccccc"/>
+                        <Setter Property="HorizontalAlignment"
+                                Value="Right"/>
+                        <Setter Property="Margin"
+                                Value="0,3,0,0"/>
+                </Style>
+                <Style x:Key="AiTimestampStyle"
+                       TargetType="TextBlock">
+                        <Setter Property="FontSize"
+                                Value="10"/>
+                        <Setter Property="Foreground"
+                                Value="#666666"/>
                         <Setter Property="HorizontalAlignment"
                                 Value="Right"/>
                         <Setter Property="Margin"

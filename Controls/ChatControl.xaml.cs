@@ -53,13 +53,13 @@ namespace CocoroAIGUI.Controls
 
             var messageText = new TextBlock
             {
-                Style = (Style)Resources["MessageTextStyle"],
+                Style = (Style)Resources["UserMessageTextStyle"],
                 Text = message
             };
 
             var timestamp = new TextBlock
             {
-                Style = (Style)Resources["TimestampStyle"],
+                Style = (Style)Resources["UserTimestampStyle"],
                 Text = DateTime.Now.ToString("HH:mm")
             };
 
@@ -91,13 +91,13 @@ namespace CocoroAIGUI.Controls
 
             var messageText = new TextBlock
             {
-                Style = (Style)Resources["MessageTextStyle"],
+                Style = (Style)Resources["AiMessageTextStyle"],
                 Text = message
             };
 
             var timestamp = new TextBlock
             {
-                Style = (Style)Resources["TimestampStyle"],
+                Style = (Style)Resources["AiTimestampStyle"],
                 Text = DateTime.Now.ToString("HH:mm")
             };
 
