@@ -70,8 +70,39 @@ CocoroAI WebSocket API 仕様書
   "timestamp": "2025-03-29T14:36:00+09:00",
   "payload": {
       "action": "update",
-      "settingKey": "inputSensitivity",
-      "value": "high"
+      "settings": {
+          "IsTopmost": true,
+          "IsEscapeCursor": false,
+          "IsAutoMove": false,
+          "WindowSize": 650.0,
+          "CurrentCharacterIndex": 0,
+          "CharacterList": [
+              {
+                  "IsReadOnly": true,
+                  "ModelName": "つくよみちゃん公式 タイプA",
+                  "VrmFilePath": "",
+                  "IsUseLLM": false,
+                  "ApiKey": "",
+                  "LLMModel": "",
+                  "SystemPrompt": "改行付きプロンプト\nプロンプト",
+                  "IsUseNijivoice": false,
+                  "NijivoiceApiKey": "",
+                  "NijivoiceActorId": ""
+              },
+              {
+                  "IsReadOnly": true,
+                  "ModelName": "初音ミクSD",
+                  "VrmFilePath": "",
+                  "IsUseLLM": false,
+                  "ApiKey": "",
+                  "LLMModel": "",
+                  "SystemPrompt": "プロンプト",
+                  "IsUseNijivoice": false,
+                  "NijivoiceApiKey": "",
+                  "NijivoiceActorId": ""
+              }
+          ]
+      }
   }
 }
 
@@ -101,13 +132,37 @@ CocoroAI WebSocket API 仕様書
   "payload": {
       "status": "ok",
       "settings": {
-          "volume": 0.8,
-          "speed": 1.0,
-          "pitch": 1.0,
-          "voiceType": "normal",
-          "language": "ja-JP",
-          "autoResponse": true,
-          "logLevel": "info"
+          "IsTopmost": true,
+          "IsEscapeCursor": false,
+          "IsAutoMove": false,
+          "WindowSize": 650.0,
+          "CurrentCharacterIndex": 0,
+          "CharacterList": [
+              {
+                  "IsReadOnly": true,
+                  "ModelName": "つくよみちゃん公式 タイプA",
+                  "VrmFilePath": "",
+                  "IsUseLLM": false,
+                  "ApiKey": "",
+                  "LLMModel": "",
+                  "SystemPrompt": "改行付きプロンプト\nプロンプト",
+                  "IsUseNijivoice": false,
+                  "NijivoiceApiKey": "",
+                  "NijivoiceActorId": ""
+              },
+              {
+                  "IsReadOnly": true,
+                  "ModelName": "初音ミクSD",
+                  "VrmFilePath": "",
+                  "IsUseLLM": false,
+                  "ApiKey": "",
+                  "LLMModel": "",
+                  "SystemPrompt": "プロンプト",
+                  "IsUseNijivoice": false,
+                  "NijivoiceApiKey": "",
+                  "NijivoiceActorId": ""
+              }
+          ]
       }
   }
 }
