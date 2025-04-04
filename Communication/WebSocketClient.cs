@@ -51,6 +51,7 @@ namespace CocoroAIGUI.Communication
         public event EventHandler<string>? ConnectionError;
         public event EventHandler? Connected;
         public event EventHandler? Disconnected;
+        public event EventHandler<ConfigSettings>? ConfigReceived;
 
         public bool IsConnected => _isConnected;
 
@@ -143,7 +144,35 @@ namespace CocoroAIGUI.Communication
                     }
                     while (!receiveResult.EndOfMessage);
 
-                    MessageReceived?.Invoke(this, result.ToString());
+                    var messageText = result.ToString();
+                    MessageReceived?.Invoke(this, messageText);
+
+                    // 設定情報のメッセージを処理
+                    try
+                    {
+                        var messageObj = JsonSerializer.Deserialize<WebSocketMessage>(messageText, new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                        if (messageObj?.Type?.ToLower() == "config")
+                        {
+                            // 設定レスポンスを解析
+                            var configResponse = JsonSerializer.Deserialize<ConfigResponseWithSettings>(messageText, new JsonSerializerOptions
+                            {
+                                PropertyNameCaseInsensitive = true
+                            });
+
+                            if (configResponse?.Payload?.Settings != null)
+                            {
+                                ConfigReceived?.Invoke(this, configResponse.Payload.Settings);
+                            }
+                        }
+                    }
+                    catch (JsonException ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"JSONパース失敗: {ex.Message}");
+                    }
                 }
             }
             catch (Exception ex)
@@ -187,6 +216,36 @@ namespace CocoroAIGUI.Communication
         }
 
         /// <summary>
+        /// 設定値を取得する
+        /// </summary>
+        /// <returns>設定取得リクエストの送信タスク</returns>
+        public async Task RequestConfigAsync()
+        {
+            var payload = new ConfigRequestPayload
+            {
+                Action = "get"
+            };
+
+            await SendMessageAsync(MessageType.Config, payload);
+        }
+
+        /// <summary>
+        /// 設定値を更新する
+        /// </summary>
+        /// <param name="settings">更新する設定値</param>
+        /// <returns>設定更新リクエストの送信タスク</returns>
+        public async Task UpdateConfigAsync(ConfigSettings settings)
+        {
+            var payload = new ConfigUpdatePayload
+            {
+                Action = "update",
+                Settings = settings
+            };
+
+            await SendMessageAsync(MessageType.Config, payload);
+        }
+
+        /// <summary>
         /// リソース解放
         /// </summary>
         public void Dispose()
@@ -216,7 +275,24 @@ namespace CocoroAIGUI.Communication
     }
 
     /// <summary>
-    /// 設定メッセージペイロードクラス
+    /// 設定リクエストペイロードクラス
+    /// </summary>
+    public class ConfigRequestPayload
+    {
+        public string Action { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// 設定更新ペイロードクラス
+    /// </summary>
+    public class ConfigUpdatePayload
+    {
+        public string Action { get; set; } = string.Empty;
+        public ConfigSettings Settings { get; set; } = new ConfigSettings();
+    }
+
+    /// <summary>
+    /// 設定メッセージペイロードクラス (旧)
     /// </summary>
     public class ConfigMessagePayload
     {
@@ -231,6 +307,47 @@ namespace CocoroAIGUI.Communication
     {
         public string Status { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
+        public ConfigSettings? Settings { get; set; }
+    }
+
+    /// <summary>
+    /// 設定レスポンスを含むメッセージクラス
+    /// </summary>
+    public class ConfigResponseWithSettings
+    {
+        public string Type { get; set; } = string.Empty;
+        public string Timestamp { get; set; } = string.Empty;
+        public ConfigResponsePayload? Payload { get; set; }
+    }
+
+    /// <summary>
+    /// キャラクター設定クラス
+    /// </summary>
+    public class CharacterSettings
+    {
+        public bool IsReadOnly { get; set; }
+        public string ModelName { get; set; } = string.Empty;
+        public string VrmFilePath { get; set; } = string.Empty;
+        public bool IsUseLLM { get; set; }
+        public string ApiKey { get; set; } = string.Empty;
+        public string LLMModel { get; set; } = string.Empty;
+        public string SystemPrompt { get; set; } = string.Empty;
+        public bool IsUseNijivoice { get; set; }
+        public string NijivoiceApiKey { get; set; } = string.Empty;
+        public string NijivoiceActorId { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// アプリケーション設定クラス
+    /// </summary>
+    public class ConfigSettings
+    {
+        public bool IsTopmost { get; set; }
+        public bool IsEscapeCursor { get; set; }
+        public bool IsAutoMove { get; set; }
+        public float WindowSize { get; set; }
+        public int CurrentCharacterIndex { get; set; }
+        public List<CharacterSettings> CharacterList { get; set; } = new List<CharacterSettings>();
     }
 
     /// <summary>
