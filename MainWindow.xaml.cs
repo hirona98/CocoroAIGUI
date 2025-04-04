@@ -45,6 +45,7 @@ namespace CocoroAIGUI
                 _communicationService.ErrorOccurred += OnErrorOccurred;
                 _communicationService.Connected += OnConnected;
                 _communicationService.Disconnected += OnDisconnected;
+                _communicationService.ConfigReceived += OnConfigReceived;
 
                 // 接続
                 _ = ConnectToServiceAsync();
@@ -68,6 +69,9 @@ namespace CocoroAIGUI
                 if (_communicationService != null)
                 {
                     await _communicationService.ConnectAsync();
+
+                    // 接続成功後、設定情報を要求
+                    await RequestConfigAsync();
                 }
             }
             catch (Exception ex)
@@ -75,6 +79,24 @@ namespace CocoroAIGUI
                 // UI更新とエラー表示
                 ShowError("接続エラー", ex.Message);
                 UpdateConnectionStatus(false);
+            }
+        }
+
+        /// <summary>
+        /// サーバーから設定情報を要求
+        /// </summary>
+        private async Task RequestConfigAsync()
+        {
+            try
+            {
+                if (_communicationService != null && _communicationService.IsConnected)
+                {
+                    await _communicationService.RequestConfigAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError("設定取得エラー", ex.Message);
             }
         }
 
@@ -136,6 +158,21 @@ namespace CocoroAIGUI
             }
         }
 
+        /// <summary>
+        /// 設定を適用
+        /// </summary>
+        private void ApplySettings()
+        {
+            var settings = AppSettings.Instance;
+            RunOnUIThread(() =>
+            {
+                // 最前面表示の設定を適用
+                Topmost = settings.IsTopmost;
+
+                // その他の設定はここに追加（必要に応じて）
+            });
+        }
+
         #region チャットコントロールイベントハンドラ
 
         /// <summary>
@@ -185,6 +222,18 @@ namespace CocoroAIGUI
                     MessageBox.Show($"設定変更エラー: {response.Message}", "エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             });
+        }
+
+        /// <summary>
+        /// 設定情報受信時のハンドラ
+        /// </summary>
+        private void OnConfigReceived(object? sender, ConfigSettings config)
+        {
+            // AppSettingsを更新
+            AppSettings.Instance.UpdateSettings(config);
+
+            // 設定を画面に反映
+            ApplySettings();
         }
 
         /// <summary>

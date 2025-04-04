@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using CocoroAIGUI.Communication;
+using CocoroAIGUI.Services;
 
 namespace CocoroAIGUI.Controls
 {
@@ -23,9 +25,15 @@ namespace CocoroAIGUI.Controls
         // 設定が変更されたかどうかを追跡するフラグ
         private bool _settingsChanged = false;
 
+        // 通信サービス
+        private CommunicationService? _communicationService;
+
         public AdminWindow()
         {
             InitializeComponent();
+
+            // 初期化
+            InitializeMainServices();
 
             // 表示設定の初期化
             InitializeDisplaySettings();
@@ -40,17 +48,40 @@ namespace CocoroAIGUI.Controls
         #region 初期化メソッド
 
         /// <summary>
+        /// メインサービスの初期化
+        /// </summary>
+        private void InitializeMainServices()
+        {
+            // 通信サービスの取得（メインウィンドウから）
+            if (Owner is MainWindow mainWindow &&
+                typeof(MainWindow).GetField("_communicationService", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(mainWindow) is CommunicationService service)
+            {
+                _communicationService = service;
+            }
+        }
+
+        /// <summary>
         /// 表示設定の初期化
         /// </summary>
         private void InitializeDisplaySettings()
         {
+            // アプリ設定からの初期値を取得
+            var appSettings = AppSettings.Instance;
+
+            // UIに反映
+            TopMostCheckBox.IsChecked = appSettings.IsTopmost;
+            EscapeCursorCheckBox.IsChecked = appSettings.IsEscapeCursor;
+            AutoMoveCheckBox.IsChecked = appSettings.IsAutoMove;
+            WindowSizeSlider.Value = appSettings.WindowSize;
+
+            // 設定を辞書に保存
             _displaySettings = new Dictionary<string, object>
             {
-                { "TopMost", false },
-                { "EscapeCursor", true }
+                { "TopMost", appSettings.IsTopmost },
+                { "EscapeCursor", appSettings.IsEscapeCursor },
+                { "AutoMove", appSettings.IsAutoMove },
+                { "WindowSize", appSettings.WindowSize }
             };
-            TopMostCheckBox.IsChecked = false;
-            EscapeCursorCheckBox.IsChecked = true;
         }
 
         /// <summary>
@@ -58,33 +89,61 @@ namespace CocoroAIGUI.Controls
         /// </summary>
         private void InitializeCharacterSettings()
         {
-            _characterSettings = new List<Dictionary<string, string>>
+            // アプリ設定からキャラクター設定を取得
+            var appSettings = AppSettings.Instance;
+
+            // キャラクターリストのクリア
+            _characterSettings.Clear();
+            CharacterSelectComboBox.Items.Clear();
+
+            // キャラクター設定を辞書のリストに変換
+            foreach (var character in appSettings.CharacterList)
             {
-                // デフォルトキャラクター
-                new Dictionary<string, string>
+                var characterDict = new Dictionary<string, string>
                 {
-                    { "Name", "デフォルト" },
-                    { "Personality", "フレンドリーで親切" },
-                    { "Settings", "ユーザーの質問に丁寧に答え、サポートします。" }
-                },
-                // カスタム1
-                new Dictionary<string, string>
+                    { "Name", character.ModelName ?? "不明" },
+                    { "Personality", character.SystemPrompt ?? "" },
+                    { "Settings", character.SystemPrompt ?? "" }
+                };
+                _characterSettings.Add(characterDict);
+
+                // コンボボックスに項目を追加
+                var item = new ComboBoxItem { Content = character.ModelName ?? "不明" };
+                CharacterSelectComboBox.Items.Add(item);
+            }
+
+            // 設定が空の場合はデフォルトを追加
+            if (_characterSettings.Count == 0)
+            {
+                _characterSettings = new List<Dictionary<string, string>>
                 {
-                    { "Name", "カスタム1" },
-                    { "Personality", "元気で明るい" },
-                    { "Settings", "ポジティブな発言が多く、ユーザーを励まします。" }
-                },
-                // カスタム2
-                new Dictionary<string, string>
-                {
-                    { "Name", "カスタム2" },
-                    { "Personality", "冷静で論理的" },
-                    { "Settings", "事実に基づいた回答を提供し、客観的な視点を保ちます。" }
-                }
-            };
+                    // デフォルトキャラクター
+                    new Dictionary<string, string>
+                    {
+                        { "Name", "デフォルト" },
+                        { "Personality", "フレンドリーで親切" },
+                        { "Settings", "ユーザーの質問に丁寧に答え、サポートします。" }
+                    }
+                };
+
+                // コンボボックスにデフォルト項目を追加
+                var defaultItem = new ComboBoxItem { Content = "デフォルト" };
+                CharacterSelectComboBox.Items.Add(defaultItem);
+            }
+
+            // 現在のキャラクターをアプリ設定から選択
+            var currentIndex = appSettings.CurrentCharacterIndex;
+            if (currentIndex >= 0 && currentIndex < CharacterSelectComboBox.Items.Count)
+            {
+                CharacterSelectComboBox.SelectedIndex = currentIndex;
+            }
+            else
+            {
+                CharacterSelectComboBox.SelectedIndex = 0;
+            }
 
             // 初期キャラクターの設定をUIに反映
-            UpdateCharacterUI(0);
+            UpdateCharacterUI(CharacterSelectComboBox.SelectedIndex);
         }
 
         /// <summary>
@@ -282,16 +341,33 @@ namespace CocoroAIGUI.Controls
         /// <summary>
         /// すべてのタブの設定を保存する
         /// </summary>
-        private void SaveAllSettings()
+        private async void SaveAllSettings()
         {
-            // 表示設定タブの設定を保存
-            SaveDisplaySettings();
+            try
+            {
+                // 表示設定タブの設定を保存
+                SaveDisplaySettings();
 
-            // 現在のキャラクター設定をメモリに保存してからキャラクター設定を保存
-            SaveCurrentCharacterToMemory();
-            SaveCharacterSettings();
+                // 現在のキャラクター設定をメモリに保存してからキャラクター設定を保存
+                SaveCurrentCharacterToMemory();
+                SaveCharacterSettings();
 
-            MessageBox.Show("すべての設定を保存しました。", "保存完了", MessageBoxButton.OK, MessageBoxImage.Information);
+                // AppSettings に設定を反映
+                UpdateAppSettings();
+
+                // WebSocketを通じて設定を更新
+                if (_communicationService != null && _communicationService.IsConnected)
+                {
+                    await _communicationService.UpdateConfigAsync(AppSettings.Instance.GetConfigSettings());
+                }
+
+                MessageBox.Show("すべての設定を保存しました。", "保存完了", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"設定の保存中にエラーが発生しました: {ex.Message}",
+                    "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>
@@ -319,10 +395,9 @@ namespace CocoroAIGUI.Controls
         private void SaveDisplaySettings()
         {
             _displaySettings["TopMost"] = TopMostCheckBox.IsChecked ?? false;
-            _displaySettings["EscapeCursor"] = EscapeCursorCheckBox.IsChecked ?? true;
-
-            // TODO: 設定ファイルへの保存処理を実装
-            // 実際の実装では設定ファイルに保存する処理を追加
+            _displaySettings["EscapeCursor"] = EscapeCursorCheckBox.IsChecked ?? false;
+            _displaySettings["AutoMove"] = AutoMoveCheckBox.IsChecked ?? false;
+            _displaySettings["WindowSize"] = WindowSizeSlider.Value;
         }
 
         /// <summary>
@@ -330,8 +405,28 @@ namespace CocoroAIGUI.Controls
         /// </summary>
         private void SaveCharacterSettings()
         {
-            // TODO: 設定ファイルへの保存処理を実装
-            // 実際の実装では設定ファイルに保存する処理を追加
+            // UIの更新は既にSaveCurrentCharacterToMemoryで行われているので、
+            // ここでは追加の処理は不要
+        }
+
+        /// <summary>
+        /// AppSettingsを更新する
+        /// </summary>
+        private void UpdateAppSettings()
+        {
+            var appSettings = AppSettings.Instance;
+
+            // 表示設定の更新
+            appSettings.IsTopmost = (bool)_displaySettings["TopMost"];
+            appSettings.IsEscapeCursor = (bool)_displaySettings["EscapeCursor"];
+            appSettings.IsAutoMove = (bool)_displaySettings["AutoMove"];
+            appSettings.WindowSize = (double)_displaySettings["WindowSize"] > 0 ? (int)(double)_displaySettings["WindowSize"] : 650;
+
+            // キャラクター設定の更新
+            appSettings.CurrentCharacterIndex = _currentCharacterIndex;
+
+            // キャラクターリストの更新はもっと複雑なので、実際の実装ではここに追加処理が必要
+            // ToDo: キャラクターリストの更新処理
         }
 
         #endregion

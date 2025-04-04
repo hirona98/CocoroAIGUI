@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CocoroAIGUI.Controls"
+        xmlns:converters="clr-namespace:CocoroAIGUI.Converters"
         mc:Ignorable="d"
         Title="管理画面"
         Height="550"
@@ -40,6 +41,9 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <!-- 変換器 -->
+        <converters:PercentageConverter x:Key="PercentageConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -52,7 +56,7 @@
                     BorderThickness="0"
                     Background="White"
                     Grid.Row="0">
-            
+
             <TabItem Header="表示設定"
                      Style="{StaticResource AdminTabItemStyle}">
                 <Grid Margin="20">
@@ -64,11 +68,43 @@
                                   VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <CheckBox x:Name="TopMostCheckBox"
-                                        Content="最前面に表示"
-                                        Margin="0,5"/>
+                                      Content="最前面に表示"
+                                      Margin="0,5"/>
                             <CheckBox x:Name="EscapeCursorCheckBox"
-                                        Content="カーソルから逃げる"
-                                        Margin="0,5" ToolTip="Escape cursor"/>
+                                      Content="カーソルから逃げる"
+                                      Margin="0,5"
+                                      ToolTip="Escape cursor"/>
+                            <CheckBox x:Name="AutoMoveCheckBox"
+                                      Content="自動的に移動する"
+                                      Margin="0,5"
+                                      ToolTip="Auto move"/>
+
+                            <!-- ウィンドウサイズ設定 -->
+                            <GroupBox Header="ウィンドウサイズ"
+                                      Margin="0,10,0,0"
+                                      Padding="10">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Slider x:Name="WindowSizeSlider"
+                                            Minimum="100"
+                                            Maximum="2000"
+                                            Value="650"
+                                            TickFrequency="100"
+                                            TickPlacement="BottomRight"
+                                            Margin="0,5"
+                                            Grid.Row="0"/>
+
+                                    <TextBlock Grid.Row="1"
+                                               Margin="0,5">
+                                        <Run Text="サイズ: "/>
+                                        <Run Text="{Binding ElementName=WindowSizeSlider, Path=Value, StringFormat='{}{0:0}'}"/>
+                                    </TextBlock>
+                                </Grid>
+                            </GroupBox>
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>

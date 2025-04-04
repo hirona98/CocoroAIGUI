@@ -5,25 +5,36 @@ using System.Windows.Data;
 namespace CocoroAIGUI.Converters
 {
     /// <summary>
-    /// 指定された値をパーセンテージで計算するコンバーター
+    /// 数値をパーセンテージ表示に変換するコンバーター
     /// </summary>
     public class PercentageConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is double actualValue && parameter is string percentageStr)
+            if (value is double doubleValue)
             {
-                if (double.TryParse(percentageStr, out double percentage))
-                {
-                    return actualValue * percentage;
-                }
+                return doubleValue * 100;
             }
+            else if (value is float floatValue)
+            {
+                return floatValue * 100;
+            }
+
             return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if (value is double doubleValue)
+            {
+                return doubleValue / 100;
+            }
+            else if (value is string stringValue && double.TryParse(stringValue, out double parsedValue))
+            {
+                return parsedValue / 100;
+            }
+
+            return value;
         }
     }
 }

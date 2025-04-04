@@ -21,6 +21,7 @@ namespace CocoroAIGUI.Services
         public event EventHandler<string>? ErrorOccurred;
         public event EventHandler? Connected;
         public event EventHandler? Disconnected;
+        public event EventHandler<ConfigSettings>? ConfigReceived;
 
         public bool IsConnected => _webSocketClient.IsConnected;
 
@@ -40,6 +41,7 @@ namespace CocoroAIGUI.Services
             _webSocketClient.ConnectionError += (sender, error) => ErrorOccurred?.Invoke(this, error);
             _webSocketClient.Connected += (sender, args) => Connected?.Invoke(this, EventArgs.Empty);
             _webSocketClient.Disconnected += (sender, args) => Disconnected?.Invoke(this, EventArgs.Empty);
+            _webSocketClient.ConfigReceived += (sender, config) => ConfigReceived?.Invoke(this, config);
         }
 
         /// <summary>
@@ -64,6 +66,23 @@ namespace CocoroAIGUI.Services
         public async Task DisconnectAsync()
         {
             await _webSocketClient.DisconnectAsync();
+        }
+
+        /// <summary>
+        /// 設定情報を要求
+        /// </summary>
+        public async Task RequestConfigAsync()
+        {
+            await _webSocketClient.RequestConfigAsync();
+        }
+
+        /// <summary>
+        /// 設定情報を更新
+        /// </summary>
+        /// <param name="settings">更新する設定情報</param>
+        public async Task UpdateConfigAsync(ConfigSettings settings)
+        {
+            await _webSocketClient.UpdateConfigAsync(settings);
         }
 
         /// <summary>
