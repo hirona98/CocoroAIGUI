@@ -64,23 +64,51 @@ CocoroAI WebSocket API 仕様書
 
 3.3 設定変更メッセージ
 ------------------------
-【リクエスト例】
+【設定更新リクエスト例】
 {
   "type": "config",
   "timestamp": "2025-03-29T14:36:00+09:00",
   "payload": {
+      "action": "update",
       "settingKey": "inputSensitivity",
       "value": "high"
   }
 }
 
-【レスポンス例】
+【設定更新レスポンス例】
 {
   "type": "config",
   "timestamp": "2025-03-29T14:36:01+09:00",
   "payload": {
       "status": "ok",
       "message": "設定を更新しました。"
+  }
+}
+
+【設定取得リクエスト例】
+{
+  "type": "config",
+  "timestamp": "2025-03-29T14:36:00+09:00",
+  "payload": {
+      "action": "get"
+  }
+}
+
+【設定取得レスポンス例】
+{
+  "type": "config",
+  "timestamp": "2025-03-29T14:36:01+09:00",
+  "payload": {
+      "status": "ok",
+      "settings": {
+          "volume": 0.8,
+          "speed": 1.0,
+          "pitch": 1.0,
+          "voiceType": "normal",
+          "language": "ja-JP",
+          "autoResponse": true,
+          "logLevel": "info"
+      }
   }
 }
 
