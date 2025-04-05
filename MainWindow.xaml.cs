@@ -20,9 +20,6 @@ namespace CocoroAIGUI
 
             // 初期化と接続
             InitializeApp();
-
-            // イベントハンドラ登録
-            RegisterEventHandlers();
         }
 
         /// <summary>
@@ -45,14 +42,16 @@ namespace CocoroAIGUI
                 _communicationService.ErrorOccurred += OnErrorOccurred;
                 _communicationService.Connected += OnConnected;
                 _communicationService.Disconnected += OnDisconnected;
-                _communicationService.ConfigReceived += OnConfigReceived;
 
-                // 接続
+                // UIコントロールのイベントハンドラを登録
+                RegisterEventHandlers();
+
+                // サーバーへの接続を開始
                 _ = ConnectToServiceAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"初期化エラー: {ex.Message}", "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowError("初期化エラー", ex.Message);
             }
         }
 
@@ -217,23 +216,24 @@ namespace CocoroAIGUI
         {
             RunOnUIThread(() =>
             {
+                // 応答ステータスをチェック
                 if (response.Status.ToLower() != "ok")
                 {
+                    // エラーの場合はメッセージを表示
                     MessageBox.Show($"設定変更エラー: {response.Message}", "エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // 設定情報が含まれている場合は適用する
+                if (response.Settings != null)
+                {
+                    // アプリケーション設定を更新
+                    AppSettings.Instance.UpdateSettings(response.Settings);
+
+                    // 設定を画面に反映
+                    ApplySettings();
                 }
             });
-        }
-
-        /// <summary>
-        /// 設定情報受信時のハンドラ
-        /// </summary>
-        private void OnConfigReceived(object? sender, ConfigSettings config)
-        {
-            // AppSettingsを更新
-            AppSettings.Instance.UpdateSettings(config);
-
-            // 設定を画面に反映
-            ApplySettings();
         }
 
         /// <summary>

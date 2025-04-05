@@ -21,7 +21,6 @@ namespace CocoroAIGUI.Services
         public event EventHandler<string>? ErrorOccurred;
         public event EventHandler? Connected;
         public event EventHandler? Disconnected;
-        public event EventHandler<ConfigSettings>? ConfigReceived;
 
         public bool IsConnected => _webSocketClient.IsConnected;
 
@@ -41,7 +40,6 @@ namespace CocoroAIGUI.Services
             _webSocketClient.ConnectionError += (sender, error) => ErrorOccurred?.Invoke(this, error);
             _webSocketClient.Connected += (sender, args) => Connected?.Invoke(this, EventArgs.Empty);
             _webSocketClient.Disconnected += (sender, args) => Disconnected?.Invoke(this, EventArgs.Empty);
-            _webSocketClient.ConfigReceived += (sender, config) => ConfigReceived?.Invoke(this, config);
         }
 
         /// <summary>
@@ -148,6 +146,7 @@ namespace CocoroAIGUI.Services
         {
             try
             {
+                // JSONメッセージを最初にデシリアライズ
                 var message = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
 
                 if (message != null && message.TryGetValue("type", out var typeElement) &&
@@ -166,15 +165,33 @@ namespace CocoroAIGUI.Services
                             break;
 
                         case "config":
-                            var configResponse = JsonSerializer.Deserialize<ConfigResponsePayload>(payloadElement.GetRawText());
-                            if (configResponse != null)
+                            // 設定情報のレスポンスを解析
+                            try
                             {
-                                ConfigResponseReceived?.Invoke(this, configResponse);
+                                var configResponseWithSettings = JsonSerializer.Deserialize<ConfigResponseWithSettings>(json,
+                                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                                if (configResponseWithSettings?.Payload != null)
+                                {
+                                    ConfigResponseReceived?.Invoke(this, configResponseWithSettings.Payload);
+                                }
+                            }
+                            catch (JsonException)
+                            {
+                                // 別形式の設定レスポンスを試す
+                                var configResponse = JsonSerializer.Deserialize<ConfigResponsePayload>(payloadElement.GetRawText(),
+                                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                                if (configResponse != null)
+                                {
+                                    ConfigResponseReceived?.Invoke(this, configResponse);
+                                }
                             }
                             break;
 
                         case "status":
-                            var statusUpdate = JsonSerializer.Deserialize<StatusMessagePayload>(payloadElement.GetRawText());
+                            var statusUpdate = JsonSerializer.Deserialize<StatusMessagePayload>(payloadElement.GetRawText(),
+                                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                             if (statusUpdate != null)
                             {
                                 StatusUpdateReceived?.Invoke(this, statusUpdate);
