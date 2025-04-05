@@ -186,7 +186,7 @@ namespace CocoroAIGUI.Controls
         private void CharacterSelectComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // 現在のキャラクター設定を保存
-            SaveCurrentCharacterToMemory();
+            SaveCurrentCharacterSettings();
 
             // 新しいキャラクターのUIを更新
             int selectedIndex = CharacterSelectComboBox.SelectedIndex;
@@ -202,7 +202,7 @@ namespace CocoroAIGUI.Controls
         private void AddCharacterButton_Click(object sender, RoutedEventArgs e)
         {
             // 現在のキャラクター設定を保存
-            SaveCurrentCharacterToMemory();
+            SaveCurrentCharacterSettings();
 
             // 新しいキャラクターの名前を設定
             var newName = "新しいキャラクター" + (_characterSettings.Count + 1);
@@ -241,7 +241,7 @@ namespace CocoroAIGUI.Controls
                 return;
             }
 
-            // 確認ダイアログを表示
+            // 碧人ダイアログを表示
             var name = _characterSettings[_currentCharacterIndex]["Name"];
             var result = MessageBox.Show($"キャラクター「{name}」を削除しますか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
@@ -262,7 +262,7 @@ namespace CocoroAIGUI.Controls
         /// <summary>
         /// 現在のキャラクター設定をメモリに保存
         /// </summary>
-        private void SaveCurrentCharacterToMemory()
+        private void SaveCurrentCharacterSettings()
         {
             if (_currentCharacterIndex >= 0 && _currentCharacterIndex < _characterSettings.Count)
             {
@@ -345,13 +345,8 @@ namespace CocoroAIGUI.Controls
         {
             try
             {
-                // 表示設定タブの設定を保存
                 SaveDisplaySettings();
-
-                // 現在のキャラクター設定をメモリに保存してからキャラクター設定を保存
-                SaveCurrentCharacterToMemory();
-                SaveCharacterSettings();
-
+                SaveCurrentCharacterSettings();
                 // AppSettings に設定を反映
                 UpdateAppSettings();
 
@@ -401,15 +396,6 @@ namespace CocoroAIGUI.Controls
         }
 
         /// <summary>
-        /// キャラクター設定を保存する
-        /// </summary>
-        private void SaveCharacterSettings()
-        {
-            // UIの更新は既にSaveCurrentCharacterToMemoryで行われているので、
-            // ここでは追加の処理は不要
-        }
-
-        /// <summary>
         /// AppSettingsを更新する
         /// </summary>
         private void UpdateAppSettings()
@@ -425,8 +411,34 @@ namespace CocoroAIGUI.Controls
             // キャラクター設定の更新
             appSettings.CurrentCharacterIndex = _currentCharacterIndex;
 
-            // キャラクターリストの更新はもっと複雑なので、実際の実装ではここに追加処理が必要
-            // ToDo: キャラクターリストの更新処理
+            // キャラクターリストの更新
+            var newCharacterList = new List<CharacterSettings>();
+
+            for (int i = 0; i < _characterSettings.Count; i++)
+            {
+                var character = _characterSettings[i];
+
+                // 既存のCharacterSettingsオブジェクトを取得（存在する場合）
+                CharacterSettings? existingCharacter = null;
+                if (i < appSettings.CharacterList.Count)
+                {
+                    existingCharacter = appSettings.CharacterList[i];
+                }
+
+                // 新しいCharacterSettingsオブジェクトを作成または既存のものを更新
+                CharacterSettings newCharacter = existingCharacter ?? new CharacterSettings();
+                // 基本項目の更新
+                newCharacter.ModelName = character["Name"];
+                newCharacter.SystemPrompt = character["Settings"];
+
+                // 既存の設定を保持（null になることはないという前提）
+                newCharacter.IsReadOnly = existingCharacter?.IsReadOnly ?? false;
+                // リストに追加
+                newCharacterList.Add(newCharacter);
+            }
+
+            // 更新したリストをAppSettingsに設定
+            appSettings.CharacterList = newCharacterList;
         }
 
         #endregion
