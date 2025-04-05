@@ -111,7 +111,7 @@ namespace CocoroAIGUI.Controls
                 var characterDict = new Dictionary<string, string>
                 {
                     { "Name", character.ModelName ?? "不明" },
-                    { "Personality", character.SystemPrompt ?? "" },
+                    { "SystemPrompt", character.SystemPrompt ?? "" },
                     { "Settings", character.SystemPrompt ?? "" }
                 };
                 _characterSettings.Add(characterDict);
@@ -130,7 +130,7 @@ namespace CocoroAIGUI.Controls
                     new Dictionary<string, string>
                     {
                         { "Name", "デフォルト" },
-                        { "Personality", "フレンドリーで親切" },
+                        { "SystemPrompt", "フレンドリーで親切" },
                         { "Settings", "ユーザーの質問に丁寧に答え、サポートします。" }
                     }
                 };
@@ -179,7 +179,7 @@ namespace CocoroAIGUI.Controls
             if (index >= 0 && index < _characterSettings.Count)
             {
                 CharacterNameTextBox.Text = _characterSettings[index]["Name"];
-                CharacterPersonalityTextBox.Text = _characterSettings[index]["Personality"];
+                SystemPromptTextBox.Text = _characterSettings[index]["SystemPrompt"];
                 CharacterSettingsTextBox.Text = _characterSettings[index]["Settings"];
                 _currentCharacterIndex = index;
             }
@@ -220,7 +220,7 @@ namespace CocoroAIGUI.Controls
             var newCharacter = new Dictionary<string, string>
             {
                 { "Name", newName },
-                { "Personality", "" },
+                { "SystemPrompt", "" },
                 { "Settings", "" }
             };
 
@@ -277,16 +277,16 @@ namespace CocoroAIGUI.Controls
             {
                 // UIから値を取得して設定を更新
                 var name = CharacterNameTextBox.Text;
-                var personality = CharacterPersonalityTextBox.Text;
+                var systemPrompt = SystemPromptTextBox.Text;
                 var settings = CharacterSettingsTextBox.Text;
 
                 // 値が変更された場合のみ更新
                 if (_characterSettings[_currentCharacterIndex]["Name"] != name ||
-                    _characterSettings[_currentCharacterIndex]["Personality"] != personality ||
+                    _characterSettings[_currentCharacterIndex]["SystemPrompt"] != systemPrompt ||
                     _characterSettings[_currentCharacterIndex]["Settings"] != settings)
                 {
                     _characterSettings[_currentCharacterIndex]["Name"] = name;
-                    _characterSettings[_currentCharacterIndex]["Personality"] = personality;
+                    _characterSettings[_currentCharacterIndex]["SystemPrompt"] = systemPrompt;
                     _characterSettings[_currentCharacterIndex]["Settings"] = settings;
 
                     // コンボボックスの表示も更新
