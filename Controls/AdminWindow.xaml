@@ -176,7 +176,8 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0"
                                                    Text="名前:"
-                                                   VerticalAlignment="Center" ToolTip="Name"/>
+                                                   VerticalAlignment="Center"
+                                                   ToolTip="Name"/>
                                         <TextBox Grid.Column="1"
                                                  x:Name="CharacterNameTextBox"
                                                  Margin="0,5"
@@ -260,7 +261,8 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0"
                                                    Text="プロンプト:"
-                                                   VerticalAlignment="Top" ToolTip="Prompt"/>
+                                                   VerticalAlignment="Top"
+                                                   ToolTip="Prompt"/>
                                         <TextBox Grid.Column="1"
                                                  x:Name="SystemPromptTextBox"
                                                  Margin="0,5"
@@ -296,77 +298,19 @@
             <TabItem Header="ライセンス"
                      Style="{StaticResource AdminTabItemStyle}"
                      ToolTip="License">
-                <Grid Margin="20">
+                <Grid Margin="20,20,20,20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-
-                    <ScrollViewer Grid.Row="1"
-                                  VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
-                            <!-- ソフトウェアライセンス情報 -->
-                            <GroupBox Header="ソフトウェア情報"
-                                      Margin="0,0,0,20"
-                                      Padding="10">
-                                <StackPanel>
-                                    <TextBlock Text="CocoroAI"
-                                               FontWeight="Bold"
-                                               FontSize="16"
-                                               Margin="0,0,0,5"/>
-                                    <TextBlock Text="バージョン: 1.0.0"
-                                               Margin="0,0,0,5"/>
-                                    <TextBlock Text="© 2025 AliceEncoder All Rights Reserved."
-                                               Margin="0,0,0,10"/>
-                                    <TextBlock TextWrapping="Wrap"
-                                               Margin="0,0,0,5">
-                                        本ソフトウェアはプライベートライセンスの下で提供されています。
-                                        許可なく再配布することはできません。
-                                    </TextBlock>
-                                </StackPanel>
-                            </GroupBox>
-
-                            <!-- 使用ライブラリ情報 -->
-                            <GroupBox Header="使用ライブラリ"
-                                      Margin="0,0,0,20"
-                                      Padding="10">
-                                <StackPanel>
-                                    <TextBlock FontWeight="Bold"
-                                               Margin="0,5">WPF (Windows Presentation Foundation)</TextBlock>
-                                    <TextBlock TextWrapping="Wrap"
-                                               Margin="0,0,0,10">
-                                        Microsoft .NET Foundationの一部として提供されているUIフレームワークです。
-                                        MITライセンスの下で提供されています。
-                                    </TextBlock>
-
-                                    <TextBlock FontWeight="Bold"
-                                               Margin="0,5">Newtonsoft.Json</TextBlock>
-                                    <TextBlock TextWrapping="Wrap"
-                                               Margin="0,0,0,10">
-                                        高性能なJSON処理ライブラリです。
-                                        MITライセンスの下で提供されています。
-                                        Copyright (c) 2007 James Newton-King
-                                    </TextBlock>
-                                </StackPanel>
-                            </GroupBox>
-
-                            <!-- お問い合わせ -->
-                            <GroupBox Header="お問い合わせ"
-                                      Margin="0,0,0,20"
-                                      Padding="10">
-                                <StackPanel>
-                                    <TextBlock TextWrapping="Wrap"
-                                               Margin="0,5">
-                                        バグ報告やご質問は下記のサポート窓口までお願いします。
-                                    </TextBlock>
-                                    <TextBlock Text="メール: support@example.com"
-                                               Margin="0,5"/>
-                                    <TextBlock Text="Webサイト: https://example.com/support"
-                                               Margin="0,5"/>
-                                </StackPanel>
-                            </GroupBox>
-                        </StackPanel>
-                    </ScrollViewer>
+                    <TextBox Grid.Column="1"
+                             x:Name="LicenseTextBox"
+                             Margin="0,5"
+                             Foreground="#FF0078D7"
+                             Height="100"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"/>
                 </Grid>
             </TabItem>
         </TabControl>
