@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -359,12 +360,30 @@ namespace CocoroAIGUI.Controls
                 UpdateAppSettings();
 
                 // WebSocketを通じて設定を更新
+                bool configUpdateSuccessful = false;
+                string errorMessage = string.Empty;
+
                 if (_communicationService != null && _communicationService.IsConnected)
                 {
-                    await _communicationService.UpdateConfigAsync(AppSettings.Instance.GetConfigSettings());
+                    try
+                    {
+                        // 通信サービスによる設定更新を実行
+                        await _communicationService.UpdateConfigAsync(AppSettings.Instance.GetConfigSettings());
+                        configUpdateSuccessful = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        errorMessage = ex.Message;
+                        configUpdateSuccessful = false;
+                    }
                 }
 
-                MessageBox.Show("すべての設定を保存しました。", "保存完了", MessageBoxButton.OK, MessageBoxImage.Information);
+                // 処理結果に応じてメッセージを表示
+                if (!configUpdateSuccessful)
+                {
+                    MessageBox.Show($"設定に失敗しました。\n\nエラー: {errorMessage}",
+                        "エラー", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             catch (System.Exception ex)
             {
