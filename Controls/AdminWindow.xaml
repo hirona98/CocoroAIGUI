@@ -162,6 +162,13 @@
                                 </Grid>
                             </GroupBox>
 
+                            <!-- LLM使用設定 -->
+                            <CheckBox x:Name="IsUseLLMCheckBox"
+                                      Content="LLMを使用する"
+                                      Margin="0,5,0,15"
+                                      Foreground="#FF4873CF"
+                                      ToolTip="Use LLM"/>
+
                             <!-- キャラクターパラメータ -->
                             <GroupBox Header="キャラクターパラメータ"
                                       Margin="0,0,20,20"

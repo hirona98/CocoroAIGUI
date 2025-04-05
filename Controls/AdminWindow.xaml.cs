@@ -112,7 +112,8 @@ namespace CocoroAIGUI.Controls
                 {
                     { "Name", character.ModelName ?? "不明" },
                     { "SystemPrompt", character.SystemPrompt ?? "" },
-                    { "Settings", character.SystemPrompt ?? "" }
+                    { "Settings", character.SystemPrompt ?? "" },
+                    { "IsUseLLM", character.IsUseLLM.ToString() }
                 };
                 _characterSettings.Add(characterDict);
 
@@ -131,7 +132,8 @@ namespace CocoroAIGUI.Controls
                     {
                         { "Name", "デフォルト" },
                         { "SystemPrompt", "フレンドリーで親切" },
-                        { "Settings", "ユーザーの質問に丁寧に答え、サポートします。" }
+                        { "Settings", "ユーザーの質問に丁寧に答え、サポートします。" },
+                        { "IsUseLLM", "True" }
                     }
                 };
 
@@ -181,6 +183,15 @@ namespace CocoroAIGUI.Controls
                 CharacterNameTextBox.Text = _characterSettings[index]["Name"];
                 SystemPromptTextBox.Text = _characterSettings[index]["SystemPrompt"];
                 CharacterSettingsTextBox.Text = _characterSettings[index]["Settings"];
+
+                // IsUseLLMチェックボックスの状態を更新
+                bool isUseLLM = false;
+                if (_characterSettings[index].ContainsKey("IsUseLLM"))
+                {
+                    bool.TryParse(_characterSettings[index]["IsUseLLM"], out isUseLLM);
+                }
+                IsUseLLMCheckBox.IsChecked = isUseLLM;
+
                 _currentCharacterIndex = index;
             }
         }
@@ -279,15 +290,30 @@ namespace CocoroAIGUI.Controls
                 var name = CharacterNameTextBox.Text;
                 var systemPrompt = SystemPromptTextBox.Text;
                 var settings = CharacterSettingsTextBox.Text;
+                var isUseLLM = IsUseLLMCheckBox.IsChecked ?? false;
 
                 // 値が変更された場合のみ更新
+                bool isUseLLMChanged = false;
+                if (_characterSettings[_currentCharacterIndex].ContainsKey("IsUseLLM"))
+                {
+                    bool currentIsUseLLM = false;
+                    bool.TryParse(_characterSettings[_currentCharacterIndex]["IsUseLLM"], out currentIsUseLLM);
+                    isUseLLMChanged = currentIsUseLLM != isUseLLM;
+                }
+                else
+                {
+                    isUseLLMChanged = isUseLLM; // デフォルトはfalseとして扱う
+                }
+
                 if (_characterSettings[_currentCharacterIndex]["Name"] != name ||
                     _characterSettings[_currentCharacterIndex]["SystemPrompt"] != systemPrompt ||
-                    _characterSettings[_currentCharacterIndex]["Settings"] != settings)
+                    _characterSettings[_currentCharacterIndex]["Settings"] != settings ||
+                    isUseLLMChanged)
                 {
                     _characterSettings[_currentCharacterIndex]["Name"] = name;
                     _characterSettings[_currentCharacterIndex]["SystemPrompt"] = systemPrompt;
                     _characterSettings[_currentCharacterIndex]["Settings"] = settings;
+                    _characterSettings[_currentCharacterIndex]["IsUseLLM"] = isUseLLM.ToString();
 
                     // コンボボックスの表示も更新
                     if (_currentCharacterIndex < CharacterSelectComboBox.Items.Count)
@@ -457,6 +483,14 @@ namespace CocoroAIGUI.Controls
                 // 基本項目の更新
                 newCharacter.ModelName = character["Name"];
                 newCharacter.SystemPrompt = character["Settings"];
+
+                // IsUseLLMの設定を更新
+                bool isUseLLM = false;
+                if (character.ContainsKey("IsUseLLM"))
+                {
+                    bool.TryParse(character["IsUseLLM"], out isUseLLM);
+                }
+                newCharacter.IsUseLLM = isUseLLM;
 
                 // 既存の設定を保持（null になることはないという前提）
                 newCharacter.IsReadOnly = existingCharacter?.IsReadOnly ?? false;
