@@ -162,17 +162,11 @@
                                 </Grid>
                             </GroupBox>
 
-                            <!-- LLM使用設定 -->
-                            <CheckBox x:Name="IsUseLLMCheckBox"
-                                      Content="LLMを使用する"
-                                      Margin="0,5,0,15"
-                                      Foreground="#FF4873CF"
-                                      ToolTip="Use LLM"/>
-
-                            <!-- LLMパラメータ -->
-                            <GroupBox Header="LLMパラメータ"
+                            <!-- 基本設定 -->
+                            <GroupBox Header="基本設定"
                                       Margin="0,0,20,20"
-                                      Padding="10">
+                                      Padding="10"
+                                      ToolTip="Basic setting">
                                 <StackPanel>
                                     <Grid Margin="0,5">
                                         <Grid.ColumnDefinitions>
@@ -187,7 +181,24 @@
                                                  Margin="0,5"
                                                  Foreground="#FF0078D7"/>
                                     </Grid>
+                                    <!-- TODO: VrmFilePath の設定（ファイルオープンダイアログもつける） -->
+                                </StackPanel>
+                            </GroupBox>
 
+                            <!-- LLMパラメータ -->
+                            <GroupBox Header="LLMパラメータ(ChatGPT)"
+                                      Margin="0,0,20,20"
+                                      Padding="10">
+                                <StackPanel>
+                                    <Grid Margin="0,5">
+                                        <CheckBox x:Name="IsUseLLMCheckBox"
+                                                  Content="LLMを使用する"
+                                                  Margin="0,5,0,15"
+                                                  Foreground="#FF4873CF"
+                                                  ToolTip="Use LLM"/>
+                                    </Grid>
+                                    <!-- TODO: ApiKey の設定 -->
+                                    <!-- TODO: LLMModel の設定 -->
                                     <Grid Margin="0,5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="100"/>
