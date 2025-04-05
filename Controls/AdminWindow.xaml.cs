@@ -112,7 +112,6 @@ namespace CocoroAIGUI.Controls
                 {
                     { "Name", character.ModelName ?? "不明" },
                     { "SystemPrompt", character.SystemPrompt ?? "" },
-                    { "Settings", character.SystemPrompt ?? "" },
                     { "IsUseLLM", character.IsUseLLM.ToString() }
                 };
                 _characterSettings.Add(characterDict);
@@ -132,7 +131,6 @@ namespace CocoroAIGUI.Controls
                     {
                         { "Name", "デフォルト" },
                         { "SystemPrompt", "フレンドリーで親切" },
-                        { "Settings", "ユーザーの質問に丁寧に答え、サポートします。" },
                         { "IsUseLLM", "True" }
                     }
                 };
@@ -182,7 +180,6 @@ namespace CocoroAIGUI.Controls
             {
                 CharacterNameTextBox.Text = _characterSettings[index]["Name"];
                 SystemPromptTextBox.Text = _characterSettings[index]["SystemPrompt"];
-                CharacterSettingsTextBox.Text = _characterSettings[index]["Settings"];
 
                 // IsUseLLMチェックボックスの状態を更新
                 bool isUseLLM = false;
@@ -232,7 +229,6 @@ namespace CocoroAIGUI.Controls
             {
                 { "Name", newName },
                 { "SystemPrompt", "" },
-                { "Settings", "" }
             };
 
             // リストに追加
@@ -289,7 +285,6 @@ namespace CocoroAIGUI.Controls
                 // UIから値を取得して設定を更新
                 var name = CharacterNameTextBox.Text;
                 var systemPrompt = SystemPromptTextBox.Text;
-                var settings = CharacterSettingsTextBox.Text;
                 var isUseLLM = IsUseLLMCheckBox.IsChecked ?? false;
 
                 // 値が変更された場合のみ更新
@@ -307,12 +302,10 @@ namespace CocoroAIGUI.Controls
 
                 if (_characterSettings[_currentCharacterIndex]["Name"] != name ||
                     _characterSettings[_currentCharacterIndex]["SystemPrompt"] != systemPrompt ||
-                    _characterSettings[_currentCharacterIndex]["Settings"] != settings ||
                     isUseLLMChanged)
                 {
                     _characterSettings[_currentCharacterIndex]["Name"] = name;
                     _characterSettings[_currentCharacterIndex]["SystemPrompt"] = systemPrompt;
-                    _characterSettings[_currentCharacterIndex]["Settings"] = settings;
                     _characterSettings[_currentCharacterIndex]["IsUseLLM"] = isUseLLM.ToString();
 
                     // コンボボックスの表示も更新
@@ -482,7 +475,7 @@ namespace CocoroAIGUI.Controls
                 CharacterSettings newCharacter = existingCharacter ?? new CharacterSettings();
                 // 基本項目の更新
                 newCharacter.ModelName = character["Name"];
-                newCharacter.SystemPrompt = character["Settings"];
+                newCharacter.SystemPrompt = character["SystemPrompt"];
 
                 // IsUseLLMの設定を更新
                 bool isUseLLM = false;
