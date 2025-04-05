@@ -32,9 +32,6 @@ namespace CocoroAIGUI.Controls
         {
             InitializeComponent();
 
-            // 初期化
-            InitializeMainServices();
-
             // 表示設定の初期化
             InitializeDisplaySettings();
 
@@ -43,6 +40,17 @@ namespace CocoroAIGUI.Controls
 
             // 元の設定のバックアップを作成
             BackupSettings();
+        }
+
+        /// <summary>
+        /// ウィンドウがロードされた後に呼び出されるイベントハンドラ
+        /// </summary>
+        protected override void OnSourceInitialized(System.EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            // Owner設定後にメインサービスを初期化
+            InitializeMainServices();
         }
 
         #region 初期化メソッド
