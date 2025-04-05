@@ -285,6 +285,9 @@ namespace CocoroAIGUI.Controls
                 // UIから値を取得して設定を更新
                 var name = CharacterNameTextBox.Text;
                 var systemPrompt = SystemPromptTextBox.Text;
+                var vrmFilePath = VrmFilePathTextBox.Text;
+                var apiKey = ApiKeyPasswordBox.Password;
+                var llmModel = LlmModelTextBox.Text;
                 var isUseLLM = IsUseLLMCheckBox.IsChecked ?? false;
 
                 // 値が変更された場合のみ更新
@@ -300,12 +303,24 @@ namespace CocoroAIGUI.Controls
                     isUseLLMChanged = isUseLLM; // デフォルトはfalseとして扱う
                 }
 
+                bool vrmFilePathChanged = !_characterSettings[_currentCharacterIndex].ContainsKey("VrmFilePath") ||
+                                         _characterSettings[_currentCharacterIndex]["VrmFilePath"] != vrmFilePath;
+
+                bool apiKeyChanged = !_characterSettings[_currentCharacterIndex].ContainsKey("ApiKey") ||
+                                    _characterSettings[_currentCharacterIndex]["ApiKey"] != apiKey;
+
+                bool llmModelChanged = !_characterSettings[_currentCharacterIndex].ContainsKey("LLMModel") ||
+                                     _characterSettings[_currentCharacterIndex]["LLMModel"] != llmModel;
+
                 if (_characterSettings[_currentCharacterIndex]["Name"] != name ||
                     _characterSettings[_currentCharacterIndex]["SystemPrompt"] != systemPrompt ||
-                    isUseLLMChanged)
+                    isUseLLMChanged || vrmFilePathChanged || apiKeyChanged || llmModelChanged)
                 {
                     _characterSettings[_currentCharacterIndex]["Name"] = name;
                     _characterSettings[_currentCharacterIndex]["SystemPrompt"] = systemPrompt;
+                    _characterSettings[_currentCharacterIndex]["VrmFilePath"] = vrmFilePath;
+                    _characterSettings[_currentCharacterIndex]["ApiKey"] = apiKey;
+                    _characterSettings[_currentCharacterIndex]["LLMModel"] = llmModel;
                     _characterSettings[_currentCharacterIndex]["IsUseLLM"] = isUseLLM.ToString();
 
                     // コンボボックスの表示も更新
@@ -485,6 +500,24 @@ namespace CocoroAIGUI.Controls
                 }
                 newCharacter.IsUseLLM = isUseLLM;
 
+                // VrmFilePathの設定を更新
+                if (character.ContainsKey("VrmFilePath"))
+                {
+                    newCharacter.VrmFilePath = character["VrmFilePath"];
+                }
+
+                // ApiKeyの設定を更新
+                if (character.ContainsKey("ApiKey"))
+                {
+                    newCharacter.ApiKey = character["ApiKey"];
+                }
+
+                // LLMModelの設定を更新
+                if (character.ContainsKey("LLMModel"))
+                {
+                    newCharacter.LLMModel = character["LLMModel"];
+                }
+
                 // 既存の設定を保持（null になることはないという前提）
                 newCharacter.IsReadOnly = existingCharacter?.IsReadOnly ?? false;
                 // リストに追加
@@ -493,6 +526,32 @@ namespace CocoroAIGUI.Controls
 
             // 更新したリストをAppSettingsに設定
             appSettings.CharacterList = newCharacterList;
+        }
+
+        #endregion
+
+        #region VRMファイル選択イベントハンドラ
+
+        /// <summary>
+        /// VRMファイル参照ボタンのクリックイベント
+        /// </summary>
+        private void BrowseVrmFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            // ファイルダイアログの設定
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "VRMファイルを選択",
+                Filter = "VRMファイル (*.vrm)|*.vrm|すべてのファイル (*.*)|*.*",
+                CheckFileExists = true,
+                Multiselect = false
+            };
+
+            // ダイアログを表示
+            if (dialog.ShowDialog() == true)
+            {
+                // 選択されたファイルのパスをテキストボックスに設定
+                VrmFilePathTextBox.Text = dialog.FileName;
+            }
         }
 
         #endregion

@@ -172,16 +172,39 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="100"/>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0"
                                                    Text="名前:"
-                                                   VerticalAlignment="Center"/>
+                                                   VerticalAlignment="Center" ToolTip="Name"/>
                                         <TextBox Grid.Column="1"
                                                  x:Name="CharacterNameTextBox"
                                                  Margin="0,5"
                                                  Foreground="#FF0078D7"/>
                                     </Grid>
-                                    <!-- TODO: VrmFilePath の設定（ファイルオープンダイアログもつける） -->
+
+                                    <!-- VrmFilePathの設定 -->
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="VRMファイル:"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1"
+                                                 x:Name="VrmFilePathTextBox"
+                                                 Margin="0,5,5,5"
+                                                 Foreground="#FF0078D7"
+                                                 IsReadOnly="True"/>
+                                        <Button Grid.Column="2"
+                                                x:Name="BrowseVrmFileButton"
+                                                Content="参照..."
+                                                Padding="10,0"
+                                                Click="BrowseVrmFileButton_Click"
+                                                ToolTip="Browse VRM file"/>
+                                    </Grid>
                                 </StackPanel>
                             </GroupBox>
 
@@ -197,8 +220,39 @@
                                                   Foreground="#FF4873CF"
                                                   ToolTip="Use LLM"/>
                                     </Grid>
-                                    <!-- TODO: ApiKey の設定 -->
-                                    <!-- TODO: LLMModel の設定 -->
+
+                                    <!-- APIキーの設定 -->
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="APIキー:"
+                                                   VerticalAlignment="Center"/>
+                                        <PasswordBox Grid.Column="1"
+                                                     x:Name="ApiKeyPasswordBox"
+                                                     Margin="0,5"
+                                                     PasswordChar="●"
+                                                     ToolTip="Enter your API key"/>
+                                    </Grid>
+
+                                    <!-- LLMモデルの設定 -->
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="LLMモデル:"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1"
+                                                 x:Name="LlmModelTextBox"
+                                                 Margin="0,5"
+                                                 Foreground="#FF0078D7"
+                                                 Text=""/>
+                                    </Grid>
+
                                     <Grid Margin="0,5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="100"/>
@@ -206,7 +260,7 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0"
                                                    Text="プロンプト:"
-                                                   VerticalAlignment="Top"/>
+                                                   VerticalAlignment="Top" ToolTip="Prompt"/>
                                         <TextBox Grid.Column="1"
                                                  x:Name="SystemPromptTextBox"
                                                  Margin="0,5"
