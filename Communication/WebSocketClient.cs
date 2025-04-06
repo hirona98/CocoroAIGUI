@@ -47,6 +47,13 @@ namespace CocoroAIGUI.Communication
 
             try
             {
+                // 既存のWebSocketが使用されていた場合は破棄して新しいインスタンスを作成
+                if (_webSocket.State != WebSocketState.None)
+                {
+                    _webSocket.Dispose();
+                    _webSocket = new ClientWebSocket();
+                }
+
                 await _webSocket.ConnectAsync(_serverUri, _cts.Token);
                 _isConnected = true;
                 Connected?.Invoke(this, EventArgs.Empty);

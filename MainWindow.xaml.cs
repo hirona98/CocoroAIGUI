@@ -4,6 +4,7 @@ using System.Windows;
 using CocoroAIGUI.Controls;
 using CocoroAIGUI.Communication;
 using CocoroAIGUI.Services;
+using System.Threading; // Timerを使用するために追加
 
 namespace CocoroAIGUI
 {
@@ -13,6 +14,8 @@ namespace CocoroAIGUI
     public partial class MainWindow : Window
     {
         private CommunicationService? _communicationService;
+        private Timer? _reconnectTimer; // 再接続用タイマー
+        private const int ReconnectIntervalMs = 3000; // 再接続間隔（3秒）
 
         public MainWindow()
         {
@@ -81,7 +84,10 @@ namespace CocoroAIGUI
                 if (_communicationService != null)
                 {
                     await _communicationService.ConnectAsync();
-
+                    if (!_communicationService.IsConnected)
+                    {
+                        StartReconnectTimer();
+                    }
                     // 接続成功後、設定情報を要求
                     await RequestConfigAsync();
                 }
@@ -89,6 +95,7 @@ namespace CocoroAIGUI
             catch (Exception)
             {
                 UpdateConnectionStatus(false);
+                StartReconnectTimer();
             }
         }
 
@@ -286,6 +293,7 @@ namespace CocoroAIGUI
         private void OnConnected(object? sender, EventArgs e)
         {
             UpdateConnectionStatus(true);
+            StopReconnectTimer(); // 再接続タイマーを停止
         }
 
         /// <summary>
@@ -294,6 +302,7 @@ namespace CocoroAIGUI
         private void OnDisconnected(object? sender, EventArgs e)
         {
             UpdateConnectionStatus(false);
+            StartReconnectTimer(); // 再接続タイマーを開始
         }
 
         #endregion
@@ -333,6 +342,33 @@ namespace CocoroAIGUI
             var adminWindow = new AdminWindow();
             adminWindow.Owner = this; // メインウィンドウを親に設定
             adminWindow.ShowDialog(); // モーダルダイアログとして表示
+        }
+
+        /// <summary>
+        /// 再接続タイマーを開始
+        /// </summary>
+        private void StartReconnectTimer()
+        {
+            if (_reconnectTimer == null)
+            {
+                _reconnectTimer = new Timer(async _ =>
+                {
+                    // 接続処理中でない場合のみ再接続を試みる
+                    if (_communicationService != null && !_communicationService.IsConnected)
+                    {
+                        await ConnectToServiceAsync();
+                    }
+                }, null, ReconnectIntervalMs, ReconnectIntervalMs);
+            }
+        }
+
+        /// <summary>
+        /// 再接続タイマーを停止
+        /// </summary>
+        private void StopReconnectTimer()
+        {
+            _reconnectTimer?.Change(Timeout.Infinite, Timeout.Infinite);
+            _reconnectTimer = null;
         }
     }
 }
