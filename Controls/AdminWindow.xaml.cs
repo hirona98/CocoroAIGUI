@@ -124,19 +124,13 @@ namespace CocoroAIGUI.Controls
                 CharacterSelectComboBox.Items.Add(item);
             }
 
-            // 現在のキャラクターをアプリ設定から選択
-            var currentIndex = appSettings.CurrentCharacterIndex;
-            if (currentIndex >= 0 && currentIndex < CharacterSelectComboBox.Items.Count)
-            {
-                CharacterSelectComboBox.SelectedIndex = currentIndex;
-            }
-            else
-            {
-                CharacterSelectComboBox.SelectedIndex = 0;
-            }
-
             // 初期キャラクターの設定をUIに反映
-            UpdateCharacterUI(CharacterSelectComboBox.SelectedIndex);
+            var currentIndex = appSettings.CurrentCharacterIndex;
+            // 選択変更イベントを発生させないようにイベントハンドラを一時的に削除
+            CharacterSelectComboBox.SelectionChanged -= CharacterSelectComboBox_SelectionChanged;
+            CharacterSelectComboBox.SelectedIndex = currentIndex;
+            CharacterSelectComboBox.SelectionChanged += CharacterSelectComboBox_SelectionChanged;
+            UpdateCharacterUI(currentIndex);
         }
 
         /// <summary>
