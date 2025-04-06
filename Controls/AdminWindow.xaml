@@ -129,10 +129,10 @@
                                   VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <!-- キャラクター選択 -->
-                            <GroupBox Header="キャラクター選択"
+                            <GroupBox Header="キャラクター選択（要再起動）"
                                       Margin="0,0,20,20"
                                       Padding="10"
-                                      ToolTip="Select Character">
+                                      ToolTip="Select Character (Restart Required)">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -199,7 +199,7 @@
                                                 Content="開く..."
                                                 Padding="10,0"
                                                 Click="BrowseVrmFileButton_Click"
-                                                ToolTip="Open..." VerticalAlignment="Center"/>
+                                                ToolTip="Open..." VerticalAlignment="Center" Foreground="#FF4873CF"/>
                                     </Grid>
                                 </StackPanel>
                             </GroupBox>
@@ -330,7 +330,7 @@
                         Content="キャンセル"
                         Width="80"
                         Height="30"
-                        Click="CancelButton_Click"/>
+                        Click="CancelButton_Click" Foreground="#FF4873CF"/>
             </StackPanel>
         </Border>
     </Grid>
