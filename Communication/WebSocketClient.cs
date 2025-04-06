@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Diagnostics;
+using System.Buffers.Text;
+using System.Buffers;
 
 namespace CocoroAIGUI.Communication
 {
@@ -122,9 +124,22 @@ namespace CocoroAIGUI.Communication
                     }
                     while (!receiveResult.EndOfMessage);
 
-                    var messageText = result.ToString();
-                    // 受信したメッセージをイベント購読者に通知するだけ
-                    MessageReceived?.Invoke(this, messageText);
+
+                    var base64Text = result.ToString();
+                    // Debug.WriteLine($"受信したBASE64メッセージ: {base64Text}");
+                    try
+                    {
+                        var jsonBytes = Convert.FromBase64String(base64Text);
+                        var messageText = Encoding.UTF8.GetString(jsonBytes);
+                        // Debug.WriteLine($"デコード後のメッセージ: {messageText}");
+                        // デコードしたJSONメッセージをイベント購読者に通知
+                        MessageReceived?.Invoke(this, messageText);
+                    }
+                    catch (FormatException ex)
+                    {
+                        Debug.WriteLine($"BASE64デコードエラー: {ex.Message}");
+                        MessageReceived?.Invoke(this, base64Text);
+                    }
                 }
             }
             catch (Exception ex)
@@ -156,9 +171,15 @@ namespace CocoroAIGUI.Communication
                     Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 });
                 System.Diagnostics.Debug.WriteLine($"送信するメッセージ: {json}");
-                var buffer = Encoding.UTF8.GetBytes(json);
 
-                await _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, _cts.Token);
+                // UTF8でJSONをバイト配列に変換
+                var jsonBytes = Encoding.UTF8.GetBytes(json);
+                // BASE64エンコード
+                var base64String = Convert.ToBase64String(jsonBytes);
+                var base64Bytes = Encoding.UTF8.GetBytes(base64String);
+                // System.Diagnostics.Debug.WriteLine($"BASE64エンコード済み: {base64String}");
+                // BASE64エンコードしたデータを送信
+                await _webSocket.SendAsync(new ArraySegment<byte>(base64Bytes), WebSocketMessageType.Text, true, _cts.Token);
             }
             catch (Exception ex)
             {
