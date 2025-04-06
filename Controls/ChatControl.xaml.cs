@@ -65,14 +65,7 @@ namespace CocoroAIGUI.Controls
                 Text = message
             };
 
-            var timestamp = new TextBlock
-            {
-                Style = (Style)Resources["UserTimestampStyle"],
-                Text = DateTime.Now.ToString("HH:mm")
-            };
-
             messageContent.Children.Add(messageText);
-            messageContent.Children.Add(timestamp);
             bubble.Child = messageContent;
             messageContainer.Children.Add(bubble);
 
@@ -103,14 +96,7 @@ namespace CocoroAIGUI.Controls
                 Text = message
             };
 
-            var timestamp = new TextBlock
-            {
-                Style = (Style)Resources["AiTimestampStyle"],
-                Text = DateTime.Now.ToString("HH:mm")
-            };
-
             messageContent.Children.Add(messageText);
-            messageContent.Children.Add(timestamp);
             bubble.Child = messageContent;
             messageContainer.Children.Add(bubble);
 

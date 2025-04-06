@@ -65,30 +65,6 @@
                         <Setter Property="Foreground"
                                 Value="#333333"/>
                 </Style>
-            
-                <!-- タイムスタンプスタイル -->
-                <Style x:Key="UserTimestampStyle"
-                       TargetType="TextBlock">
-                        <Setter Property="FontSize"
-                                Value="10"/>
-                        <Setter Property="Foreground"
-                                Value="#cccccc"/>
-                        <Setter Property="HorizontalAlignment"
-                                Value="Right"/>
-                        <Setter Property="Margin"
-                                Value="0,3,0,0"/>
-                </Style>
-                <Style x:Key="AiTimestampStyle"
-                       TargetType="TextBlock">
-                        <Setter Property="FontSize"
-                                Value="10"/>
-                        <Setter Property="Foreground"
-                                Value="#666666"/>
-                        <Setter Property="HorizontalAlignment"
-                                Value="Right"/>
-                        <Setter Property="Margin"
-                                Value="0,3,0,0"/>
-                </Style>
         </UserControl.Resources>
 
         <Grid>
