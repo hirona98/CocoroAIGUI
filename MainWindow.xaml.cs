@@ -201,12 +201,12 @@ namespace CocoroAIGUI
                 }
                 else
                 {
-                    ChatControlInstance.AddAiMessage("WebSocket接続が確立されていません。");
+                    ChatControlInstance.AddSystemErrorMessage("WebSocket接続が確立されていません。");
                 }
             }
             catch (Exception ex)
             {
-                ChatControlInstance.AddAiMessage($"エラー: {ex.Message}");
+                ChatControlInstance.AddSystemErrorMessage($"エラー: {ex.Message}");
             }
         }
 
