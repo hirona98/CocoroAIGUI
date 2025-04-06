@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace CocoroAIGUI.Communication
 {
@@ -55,7 +56,7 @@ namespace CocoroAIGUI.Communication
             }
             catch (Exception ex)
             {
-                ConnectionError?.Invoke(this, $"接続エラー: {ex.Message}");
+                Debug.WriteLine($"接続エラー: {ex.Message}");
             }
         }
 

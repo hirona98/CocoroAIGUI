@@ -86,10 +86,8 @@ namespace CocoroAIGUI
                     await RequestConfigAsync();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // UI更新とエラー表示
-                ShowError("接続エラー", ex.Message);
                 UpdateConnectionStatus(false);
             }
         }
@@ -201,7 +199,7 @@ namespace CocoroAIGUI
                 }
                 else
                 {
-                    ChatControlInstance.AddSystemErrorMessage("WebSocket接続が確立されていません。");
+                    ChatControlInstance.AddSystemErrorMessage("接続が確立されていません");
                 }
             }
             catch (Exception ex)
@@ -279,7 +277,7 @@ namespace CocoroAIGUI
         /// </summary>
         private void OnErrorOccurred(object? sender, string error)
         {
-            ShowError("通信エラー", error);
+            ShowError("エラー", error);
         }
 
         /// <summary>
