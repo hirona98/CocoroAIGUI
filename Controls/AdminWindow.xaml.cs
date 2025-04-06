@@ -170,6 +170,16 @@ namespace CocoroAIGUI.Controls
                 }
                 IsUseLLMCheckBox.IsChecked = isUseLLM;
 
+                // IsReadOnlyの状態を確認し、該当するUIコントロールの有効/無効を設定
+                bool isReadOnly = false;
+                if (index < AppSettings.Instance.CharacterList.Count)
+                {
+                    isReadOnly = AppSettings.Instance.CharacterList[index].IsReadOnly;
+                }
+                CharacterNameTextBox.IsEnabled = !isReadOnly;
+                VrmFilePathTextBox.IsEnabled = !isReadOnly;
+                BrowseVrmFileButton.IsEnabled = !isReadOnly;
+
                 _currentCharacterIndex = index;
             }
         }
@@ -270,6 +280,20 @@ namespace CocoroAIGUI.Controls
                 var apiKey = ApiKeyPasswordBox.Password;
                 var llmModel = LlmModelTextBox.Text;
                 var isUseLLM = IsUseLLMCheckBox.IsChecked ?? false;
+
+                // IsReadOnlyの状態を確認
+                bool isReadOnly = false;
+                if (_currentCharacterIndex < AppSettings.Instance.CharacterList.Count)
+                {
+                    isReadOnly = AppSettings.Instance.CharacterList[_currentCharacterIndex].IsReadOnly;
+                }
+
+                // ReadOnlyの場合、元の名前とVRMファイルパスを保持
+                if (isReadOnly)
+                {
+                    name = _characterSettings[_currentCharacterIndex]["Name"];
+                    vrmFilePath = _characterSettings[_currentCharacterIndex]["VrmFilePath"];
+                }
 
                 // 値が変更された場合のみ更新
                 bool isUseLLMChanged = false;
