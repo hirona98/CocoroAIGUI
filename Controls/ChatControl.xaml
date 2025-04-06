@@ -80,7 +80,7 @@
                         <Setter Property="FontSize"
                                 Value="14"/>
                         <Setter Property="Foreground"
-                                Value="#333333"/>
+                                Value="#FF585858"/>
                 </Style>
 
                 <!-- システムエラーメッセージテキストスタイル -->
@@ -91,7 +91,7 @@
                         <Setter Property="FontSize"
                                 Value="14"/>
                         <Setter Property="Foreground"
-                                Value="#CC0000"/>
+                                Value="#FF525252"/>
                         <Setter Property="HorizontalAlignment"
                                 Value="Center"/>
                 </Style>
