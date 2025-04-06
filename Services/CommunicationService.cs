@@ -18,6 +18,7 @@ namespace CocoroAIGUI.Services
         public event EventHandler<string>? ChatMessageReceived;
         public event EventHandler<ConfigResponsePayload>? ConfigResponseReceived;
         public event EventHandler<StatusMessagePayload>? StatusUpdateReceived;
+        public event EventHandler<SystemMessagePayload>? SystemMessageReceived;
         public event EventHandler<string>? ErrorOccurred;
         public event EventHandler? Connected;
         public event EventHandler? Disconnected;
@@ -195,6 +196,15 @@ namespace CocoroAIGUI.Services
                             if (statusUpdate != null)
                             {
                                 StatusUpdateReceived?.Invoke(this, statusUpdate);
+                            }
+                            break;
+
+                        case "system":
+                            var systemMessage = JsonSerializer.Deserialize<SystemMessagePayload>(payloadElement.GetRawText(),
+                                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                            if (systemMessage != null)
+                            {
+                                SystemMessageReceived?.Invoke(this, systemMessage);
                             }
                             break;
 

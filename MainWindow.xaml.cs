@@ -51,6 +51,7 @@ namespace CocoroAIGUI
                 _communicationService.ChatMessageReceived += OnChatMessageReceived;
                 _communicationService.ConfigResponseReceived += OnConfigResponseReceived;
                 _communicationService.StatusUpdateReceived += OnStatusUpdateReceived;
+                _communicationService.SystemMessageReceived += OnSystemMessageReceived;
                 _communicationService.ErrorOccurred += OnErrorOccurred;
                 _communicationService.Connected += OnConnected;
                 _communicationService.Disconnected += OnDisconnected;
@@ -254,6 +255,23 @@ namespace CocoroAIGUI
         private void OnStatusUpdateReceived(object? sender, StatusMessagePayload status)
         {
             // 必要なステータス処理を実装する場合はここに追加
+        }
+
+        /// <summary>
+        /// システムメッセージ受信時のハンドラ
+        /// </summary>
+        private void OnSystemMessageReceived(object? sender, SystemMessagePayload systemMessage)
+        {
+            // levelがerrorの場合のみ処理する（infoは無視）
+            if (systemMessage.Level.ToLower() == "error")
+            {
+                RunOnUIThread(() =>
+                {
+                    // エラーメッセージをチャットウィンドウに表示（中央グレー枠）
+                    ChatControlInstance.AddSystemErrorMessage(systemMessage.Message);
+                });
+            }
+            // その他のレベル（info等）は無視
         }
 
         /// <summary>

@@ -46,6 +46,23 @@
                                 Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollViewer}}, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.9}"/>
                 </Style>
 
+                <!-- システムエラーメッセージバブルスタイル -->
+                <Style x:Key="SystemErrorBubbleStyle"
+                       TargetType="Border">
+                        <Setter Property="Background"
+                                Value="#CCCCCC"/>
+                        <Setter Property="CornerRadius"
+                                Value="10"/>
+                        <Setter Property="Padding"
+                                Value="10"/>
+                        <Setter Property="Margin"
+                                Value="20,5,20,5"/>
+                        <Setter Property="HorizontalAlignment"
+                                Value="Center"/>
+                        <Setter Property="MaxWidth"
+                                Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollViewer}}, Path=ActualWidth, Converter={StaticResource PercentageConverter}, ConverterParameter=0.8}"/>
+                </Style>
+
                 <!-- メッセージテキストスタイル -->
                 <Style x:Key="UserMessageTextStyle"
                        TargetType="TextBlock">
@@ -64,6 +81,19 @@
                                 Value="14"/>
                         <Setter Property="Foreground"
                                 Value="#333333"/>
+                </Style>
+
+                <!-- システムエラーメッセージテキストスタイル -->
+                <Style x:Key="SystemErrorMessageTextStyle"
+                       TargetType="TextBlock">
+                        <Setter Property="TextWrapping"
+                                Value="Wrap"/>
+                        <Setter Property="FontSize"
+                                Value="14"/>
+                        <Setter Property="Foreground"
+                                Value="#CC0000"/>
+                        <Setter Property="HorizontalAlignment"
+                                Value="Center"/>
                 </Style>
         </UserControl.Resources>
 

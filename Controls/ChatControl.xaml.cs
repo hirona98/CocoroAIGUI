@@ -107,6 +107,37 @@ namespace CocoroAIGUI.Controls
         }
 
         /// <summary>
+        /// システムエラーメッセージをUIに追加（中央のグレー枠に表示）
+        /// </summary>
+        /// <param name="message">エラーメッセージ</param>
+        public void AddSystemErrorMessage(string message)
+        {
+            var messageContainer = new StackPanel();
+
+            var bubble = new Border
+            {
+                Style = (Style)Resources["SystemErrorBubbleStyle"]
+            };
+
+            var messageContent = new StackPanel();
+
+            var messageText = new TextBlock
+            {
+                Style = (Style)Resources["SystemErrorMessageTextStyle"],
+                Text = message
+            };
+
+            messageContent.Children.Add(messageText);
+            bubble.Child = messageContent;
+            messageContainer.Children.Add(bubble);
+
+            ChatMessagesPanel.Children.Add(messageContainer);
+
+            // 自動スクロール
+            ChatScrollViewer.ScrollToEnd();
+        }
+
+        /// <summary>
         /// チャット履歴をクリア
         /// </summary>
         public void ClearChat()

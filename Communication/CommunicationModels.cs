@@ -10,7 +10,8 @@ namespace CocoroAIGUI.Communication
         Chat,
         Config,
         Control,
-        Status
+        Status,
+        System
     }
 
     /// <summary>
@@ -140,5 +141,14 @@ namespace CocoroAIGUI.Communication
     {
         public int CurrentCPU { get; set; }
         public string Status { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// システムメッセージペイロードクラス
+    /// </summary>
+    public class SystemMessagePayload
+    {
+        public string Level { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
     }
 }
