@@ -111,33 +111,17 @@ namespace CocoroAIGUI.Controls
                 var characterDict = new Dictionary<string, string>
                 {
                     { "Name", character.ModelName ?? "不明" },
-                    { "SystemPrompt", character.SystemPrompt ?? "" },
-                    { "IsUseLLM", character.IsUseLLM.ToString() }
+                    { "VrmFilePath", character.VrmFilePath ?? "" },
+                    { "IsUseLLM", character.IsUseLLM.ToString() },
+                    { "ApiKey", character.ApiKey ?? "" },
+                    { "LLMModel", character.LLMModel ?? "" },
+                    { "SystemPrompt", character.SystemPrompt ?? "" }
                 };
                 _characterSettings.Add(characterDict);
 
                 // コンボボックスに項目を追加
                 var item = new ComboBoxItem { Content = character.ModelName ?? "不明" };
                 CharacterSelectComboBox.Items.Add(item);
-            }
-
-            // 設定が空の場合はデフォルトを追加
-            if (_characterSettings.Count == 0)
-            {
-                _characterSettings = new List<Dictionary<string, string>>
-                {
-                    // デフォルトキャラクター
-                    new Dictionary<string, string>
-                    {
-                        { "Name", "デフォルト" },
-                        { "SystemPrompt", "フレンドリーで親切" },
-                        { "IsUseLLM", "True" }
-                    }
-                };
-
-                // コンボボックスにデフォルト項目を追加
-                var defaultItem = new ComboBoxItem { Content = "デフォルト" };
-                CharacterSelectComboBox.Items.Add(defaultItem);
             }
 
             // 現在のキャラクターをアプリ設定から選択
@@ -179,6 +163,9 @@ namespace CocoroAIGUI.Controls
             if (index >= 0 && index < _characterSettings.Count)
             {
                 CharacterNameTextBox.Text = _characterSettings[index]["Name"];
+                VrmFilePathTextBox.Text = _characterSettings[index]["VrmFilePath"];
+                ApiKeyPasswordBox.Password = _characterSettings[index]["ApiKey"];
+                LlmModelTextBox.Text = _characterSettings[index]["LLMModel"];
                 SystemPromptTextBox.Text = _characterSettings[index]["SystemPrompt"];
 
                 // IsUseLLMチェックボックスの状態を更新

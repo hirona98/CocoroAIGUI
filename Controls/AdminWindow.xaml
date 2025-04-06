@@ -144,10 +144,6 @@
                                               Margin="0,5,10,5"
                                               SelectionChanged="CharacterSelectComboBox_SelectionChanged"
                                               Foreground="#FF4873CF">
-                                        <ComboBoxItem Content="デフォルト"
-                                                      IsSelected="True"/>
-                                        <ComboBoxItem Content="カスタム1"/>
-                                        <ComboBoxItem Content="カスタム2"/>
                                     </ComboBox>
 
                                     <Button x:Name="AddCharacterButton"
