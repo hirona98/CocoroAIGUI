@@ -151,7 +151,6 @@
                                             Content="キャラクターを追加"
                                             Margin="0,5,0,5"
                                             Padding="10,5"
-                                            VerticalAlignment="Center"
                                             Click="AddCharacterButton_Click"
                                             Foreground="#FF4873CF"
                                             ToolTip="Add character"/>
@@ -197,16 +196,16 @@
                                                  IsReadOnly="True"/>
                                         <Button Grid.Column="2"
                                                 x:Name="BrowseVrmFileButton"
-                                                Content="参照..."
+                                                Content="開く..."
                                                 Padding="10,0"
                                                 Click="BrowseVrmFileButton_Click"
-                                                ToolTip="Browse VRM file"/>
+                                                ToolTip="Open..." VerticalAlignment="Center"/>
                                     </Grid>
                                 </StackPanel>
                             </GroupBox>
 
                             <!-- LLMパラメータ -->
-                            <GroupBox Header="LLMパラメータ(ChatGPT)"
+                            <GroupBox Header="LLM(gpt, o1, o3, gemini)"
                                       Margin="0,0,20,20"
                                       Padding="10">
                                 <StackPanel>
