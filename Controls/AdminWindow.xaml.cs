@@ -212,24 +212,20 @@ namespace CocoroAIGUI.Controls
             // 現在のキャラクター設定を保存
             SaveCurrentCharacterSettings();
 
-            // 新しいキャラクターの名前を設定
-            var newName = "新しいキャラクター" + (_characterSettings.Count + 1);
-
-            // 新しいキャラクター設定を作成
+            // 新しいキャラクターを追加
+            var newName = "New Character" + (_characterSettings.Count + 1);
             var newCharacter = new Dictionary<string, string>
             {
-                { "Name", newName },
+                { "Name", "" },
+                { "VrmFilePath", "" },
+                { "IsUseLLM", "false" },
+                { "ApiKey", "" },
+                { "LLMModel", "" },
                 { "SystemPrompt", "" },
             };
-
-            // リストに追加
             _characterSettings.Add(newCharacter);
-
-            // コンボボックスに項目を追加
             var newItem = new ComboBoxItem { Content = newName };
             CharacterSelectComboBox.Items.Add(newItem);
-
-            // 新しいキャラクターを選択
             CharacterSelectComboBox.SelectedIndex = _characterSettings.Count - 1;
 
             // 設定変更フラグを設定
