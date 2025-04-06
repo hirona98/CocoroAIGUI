@@ -40,13 +40,14 @@
 
                                 <Button x:Name="AdminButton"
                                         Grid.Column="1"
-                                        Content="Manage"
+                                        Content="Setting"
                                         Margin="0,0,20,0"
                                         Padding="15,5"
                                         Background="#4873CF"
                                         Foreground="WhiteSmoke"
                                         BorderThickness="0"
-                                        Click="AdminButton_Click"/>
+                                        Click="AdminButton_Click"
+                                                FontSize="14"/>
                         </Grid>
                 </Grid>
 
