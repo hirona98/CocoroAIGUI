@@ -124,7 +124,7 @@
                                          Height="55"
                                          MinHeight="55"
                                          MaxHeight="180"
-                                         Padding="10,8,10,8"
+                                         Padding="5"
                                          FontSize="14"
                                          BorderThickness="0"
                                          Background="Transparent"

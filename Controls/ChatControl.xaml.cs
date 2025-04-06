@@ -18,6 +18,14 @@ namespace CocoroAIGUI.Controls
         }
 
         /// <summary>
+        /// メッセージ入力テキストボックスにフォーカスを設定
+        /// </summary>
+        public void FocusMessageTextBox()
+        {
+            MessageTextBox.Focus();
+        }
+
+        /// <summary>
         /// ユーザーメッセージを送信
         /// </summary>
         private void SendMessage()

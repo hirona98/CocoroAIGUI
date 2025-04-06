@@ -18,8 +18,20 @@ namespace CocoroAIGUI
         {
             InitializeComponent();
 
+            // ウィンドウのロード時にメッセージテキストボックスにフォーカスを設定するイベントを追加
+            this.Loaded += MainWindow_Loaded;
+
             // 初期化と接続
             InitializeApp();
+        }
+
+        /// <summary>
+        /// ウィンドウのロード完了時のイベントハンドラ
+        /// </summary>
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // ChatControlのMessageTextBoxにフォーカス設定
+            ChatControlInstance.FocusMessageTextBox();
         }
 
         /// <summary>
