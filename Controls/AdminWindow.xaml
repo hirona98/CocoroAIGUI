@@ -199,7 +199,9 @@
                                                 Content="開く..."
                                                 Padding="10,0"
                                                 Click="BrowseVrmFileButton_Click"
-                                                ToolTip="Open..." VerticalAlignment="Center" Foreground="#FF4873CF"/>
+                                                ToolTip="Open..."
+                                                VerticalAlignment="Center"
+                                                Foreground="#FF4873CF"/>
                                     </Grid>
                                 </StackPanel>
                             </GroupBox>
@@ -212,7 +214,6 @@
                                     <Grid Margin="0,5">
                                         <CheckBox x:Name="IsUseLLMCheckBox"
                                                   Content="LLMを使用する"
-                                                  Margin="0,5,0,15"
                                                   Foreground="#FF4873CF"
                                                   ToolTip="Use LLM"/>
                                     </Grid>
@@ -230,6 +231,7 @@
                                                      x:Name="ApiKeyPasswordBox"
                                                      Margin="0,5"
                                                      PasswordChar="●"
+                                                     Foreground="#FF4873CF"
                                                      ToolTip="Enter your API key"/>
                                     </Grid>
 
@@ -277,6 +279,60 @@
                                 </StackPanel>
                             </GroupBox>
 
+
+                            <!-- TTSパラメータ -->
+                            <GroupBox Header="TTS(COEIROINK/VOICEVOX/SHAREVOX/AivisSpeech)"
+                                      Margin="0,0,20,20"
+                                      Padding="10">
+                                <StackPanel>
+                                    <Grid Margin="0,5">
+                                        <CheckBox x:Name="IsUseTTSCheckBox"
+                                                  Content="TTSを使用する"
+                                                  Foreground="#FF4873CF"
+                                                  ToolTip="Use TTS"/>
+                                    </Grid>
+
+                                    <!-- エンドポイントURLの設定 -->
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="Endpoint URL:"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1"
+                                                 x:Name="TTSEndpointURLTextBox"
+                                                 Margin="0,5"
+                                                 Foreground="#FF0078D7"
+                                                 Text=""/>
+                                    </Grid>
+
+                                    <!-- スピーカーIDの設定 -->
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="Sperker ID:"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1"
+                                                 x:Name="TTSSperkerIDTextBox"
+                                                 Margin="0,5"
+                                                 Foreground="#FF0078D7"
+                                                 Text=""/>
+                                    </Grid>
+
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                    </Grid>
+                                </StackPanel>
+                            </GroupBox>
+
                             <Button x:Name="DeleteCharacterButton"
                                     Content="このキャラクターを削除"
                                     Padding="15,5"
@@ -284,7 +340,8 @@
                                     Foreground="WhiteSmoke"
                                     Click="DeleteCharacterButton_Click"
                                     HorizontalAlignment="Left"
-                                    Margin="0,10,0,0"/>
+                                    Margin="0,10,0,0"
+                                    ToolTip="Delete this character"/>
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
@@ -330,7 +387,8 @@
                         Content="キャンセル"
                         Width="80"
                         Height="30"
-                        Click="CancelButton_Click" Foreground="#FF4873CF"/>
+                        Click="CancelButton_Click"
+                        Foreground="#FF4873CF"/>
             </StackPanel>
         </Border>
     </Grid>

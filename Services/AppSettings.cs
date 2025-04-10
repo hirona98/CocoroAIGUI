@@ -47,11 +47,16 @@ namespace CocoroAIGUI.Services
             {
                 new CharacterSettings
                 {
-                    IsReadOnly = true,
-                    ModelName = "デフォルト",
-                    IsUseLLM = true,
+                    IsReadOnly = false,
+                    ModelName = "model_name",
+                    VrmFilePath = "vrm_file_path",
+                    IsUseLLM = false,
+                    ApiKey = "your_api_key",
                     LLMModel = "gpt-3.5-turbo",
-                    SystemPrompt = "あなたは親切なアシスタントです。"
+                    SystemPrompt = "あなたは親切なアシスタントです。",
+                    IsUseTTS = false,
+                    TTSEndpointURL = "http://localhost:50021",
+                    TTSSperkerID = "1",
                 }
             };
         }

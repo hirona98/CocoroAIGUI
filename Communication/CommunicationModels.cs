@@ -109,7 +109,7 @@ namespace CocoroAIGUI.Communication
         public string SystemPrompt { get; set; } = string.Empty;
         public bool IsUseTTS { get; set; }
         public string TTSEndpointURL { get; set; } = string.Empty;
-        public string TTSperkerID { get; set; } = string.Empty;
+        public string TTSSperkerID { get; set; } = string.Empty;
     }
 
     /// <summary>

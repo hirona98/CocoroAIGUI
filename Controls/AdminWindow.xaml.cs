@@ -1,9 +1,9 @@
+using CocoroAIGUI.Communication;
+using CocoroAIGUI.Services;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using CocoroAIGUI.Communication;
-using CocoroAIGUI.Services;
 
 namespace CocoroAIGUI.Controls
 {
@@ -115,7 +115,10 @@ namespace CocoroAIGUI.Controls
                     { "IsUseLLM", character.IsUseLLM.ToString() },
                     { "ApiKey", character.ApiKey ?? "" },
                     { "LLMModel", character.LLMModel ?? "" },
-                    { "SystemPrompt", character.SystemPrompt ?? "" }
+                    { "SystemPrompt", character.SystemPrompt ?? "" },
+                    { "IsUseTTS", character.IsUseTTS.ToString() },
+                    { "TTSEndpointURL", character.TTSEndpointURL ?? "" },
+                    { "TTSSperkerID", character.TTSSperkerID ?? "" }
                 };
                 _characterSettings.Add(characterDict);
 
@@ -161,6 +164,8 @@ namespace CocoroAIGUI.Controls
                 ApiKeyPasswordBox.Password = _characterSettings[index]["ApiKey"];
                 LlmModelTextBox.Text = _characterSettings[index]["LLMModel"];
                 SystemPromptTextBox.Text = _characterSettings[index]["SystemPrompt"];
+                TTSEndpointURLTextBox.Text = _characterSettings[index]["TTSEndpointURL"];
+                TTSSperkerIDTextBox.Text = _characterSettings[index]["TTSSperkerID"];
 
                 // IsUseLLMチェックボックスの状態を更新
                 bool isUseLLM = false;
@@ -169,6 +174,14 @@ namespace CocoroAIGUI.Controls
                     bool.TryParse(_characterSettings[index]["IsUseLLM"], out isUseLLM);
                 }
                 IsUseLLMCheckBox.IsChecked = isUseLLM;
+
+                // IsUseTTSチェックボックスの状態を更新
+                bool isUseTTS = false;
+                if (_characterSettings[index].ContainsKey("IsUseTTS"))
+                {
+                    bool.TryParse(_characterSettings[index]["IsUseTTS"], out isUseTTS);
+                }
+                IsUseTTSCheckBox.IsChecked = isUseTTS;
 
                 // IsReadOnlyの状態を確認し、該当するUIコントロールの有効/無効を設定
                 bool isReadOnly = false;
@@ -222,6 +235,9 @@ namespace CocoroAIGUI.Controls
                 { "ApiKey", "" },
                 { "LLMModel", "" },
                 { "SystemPrompt", "" },
+                { "IsUseTTS", "false"},
+                { "TTSEndpointURL", "" },
+                { "TTSSperkerID", "" }
             };
             _characterSettings.Add(newCharacter);
             var newItem = new ComboBoxItem { Content = newName };
@@ -276,6 +292,9 @@ namespace CocoroAIGUI.Controls
                 var apiKey = ApiKeyPasswordBox.Password;
                 var llmModel = LlmModelTextBox.Text;
                 var isUseLLM = IsUseLLMCheckBox.IsChecked ?? false;
+                var isUseTTS = IsUseTTSCheckBox.IsChecked ?? false;
+                var ttsEndpointURL = TTSEndpointURLTextBox.Text;
+                var ttsSperkerID = TTSSperkerIDTextBox.Text;
 
                 // IsReadOnlyの状態を確認
                 bool isReadOnly = false;
@@ -303,6 +322,17 @@ namespace CocoroAIGUI.Controls
                 {
                     isUseLLMChanged = isUseLLM; // デフォルトはfalseとして扱う
                 }
+                bool isUseTTSChanged = false;
+                if (_characterSettings[_currentCharacterIndex].ContainsKey("IsUseTTS"))
+                {
+                    bool currentIsUseTTS = false;
+                    bool.TryParse(_characterSettings[_currentCharacterIndex]["IsUseTTS"], out currentIsUseTTS);
+                    isUseTTSChanged = currentIsUseTTS != isUseTTS;
+                }
+                else
+                {
+                    isUseTTSChanged = isUseTTS; // デフォルトはfalseとして扱う
+                }
 
                 bool vrmFilePathChanged = !_characterSettings[_currentCharacterIndex].ContainsKey("VrmFilePath") ||
                                          _characterSettings[_currentCharacterIndex]["VrmFilePath"] != vrmFilePath;
@@ -312,10 +342,15 @@ namespace CocoroAIGUI.Controls
 
                 bool llmModelChanged = !_characterSettings[_currentCharacterIndex].ContainsKey("LLMModel") ||
                                      _characterSettings[_currentCharacterIndex]["LLMModel"] != llmModel;
+                bool ttsEndpointURLChanged = !_characterSettings[_currentCharacterIndex].ContainsKey("TTSEndpointURL") ||
+                                            _characterSettings[_currentCharacterIndex]["TTSEndpointURL"] != ttsEndpointURL;
+                bool ttsSperkerIDChanged = !_characterSettings[_currentCharacterIndex].ContainsKey("TTSSperkerID") ||
+                                            _characterSettings[_currentCharacterIndex]["TTSSperkerID"] != ttsSperkerID;
 
                 if (_characterSettings[_currentCharacterIndex]["Name"] != name ||
                     _characterSettings[_currentCharacterIndex]["SystemPrompt"] != systemPrompt ||
-                    isUseLLMChanged || vrmFilePathChanged || apiKeyChanged || llmModelChanged)
+                    isUseLLMChanged || isUseTTSChanged || vrmFilePathChanged || apiKeyChanged || llmModelChanged ||
+                    ttsEndpointURLChanged || ttsSperkerIDChanged)
                 {
                     _characterSettings[_currentCharacterIndex]["Name"] = name;
                     _characterSettings[_currentCharacterIndex]["SystemPrompt"] = systemPrompt;
@@ -323,6 +358,9 @@ namespace CocoroAIGUI.Controls
                     _characterSettings[_currentCharacterIndex]["ApiKey"] = apiKey;
                     _characterSettings[_currentCharacterIndex]["LLMModel"] = llmModel;
                     _characterSettings[_currentCharacterIndex]["IsUseLLM"] = isUseLLM.ToString();
+                    _characterSettings[_currentCharacterIndex]["TTSEndpointURL"] = ttsEndpointURL;
+                    _characterSettings[_currentCharacterIndex]["TTSSperkerID"] = ttsSperkerID;
+                    _characterSettings[_currentCharacterIndex]["IsUseTTS"] = isUseTTS.ToString();
 
                     // コンボボックスの表示も更新
                     if (_currentCharacterIndex < CharacterSelectComboBox.Items.Count)
@@ -517,6 +555,26 @@ namespace CocoroAIGUI.Controls
                 if (character.ContainsKey("LLMModel"))
                 {
                     newCharacter.LLMModel = character["LLMModel"];
+                }
+
+                // IsUseTTSの設定を更新
+                bool isUseTTS = false;
+                if (character.ContainsKey("IsUseTTS"))
+                {
+                    bool.TryParse(character["IsUseTTS"], out isUseTTS);
+                }
+                newCharacter.IsUseTTS = isUseTTS;
+
+                // TTSEndpointURLの設定を更新
+                if (character.ContainsKey("TTSEndpointURL"))
+                {
+                    newCharacter.TTSEndpointURL = character["TTSEndpointURL"];
+                }
+
+                // TTSSperkerIDの設定を更新
+                if (character.ContainsKey("TTSSperkerID"))
+                {
+                    newCharacter.TTSSperkerID = character["TTSSperkerID"];
                 }
 
                 // 既存の設定を保持（null になることはないという前提）

@@ -88,7 +88,7 @@ CocoroAI WebSocket API 仕様書
                   "SystemPrompt": "改行付きプロンプト\nプロンプト",
                   "IsUseTTS": false,
                   "TTSEndpointURL": "",
-                  "TTSperkerID": ""
+                  "TTSSperkerID": ""
               },
               {
                   "IsReadOnly": true,
@@ -100,7 +100,7 @@ CocoroAI WebSocket API 仕様書
                   "SystemPrompt": "プロンプト",
                   "IsUseTTS": false,
                   "TTSEndpointURL": "",
-                  "TTSperkerID": ""
+                  "TTSSperkerID": ""
               }
           ]
       }
@@ -149,7 +149,7 @@ CocoroAI WebSocket API 仕様書
                   "SystemPrompt": "改行付きプロンプト\nプロンプト",
                   "IsUseTTS": false,
                   "TTSEndpointURL": "",
-                  "TTSperkerID": ""
+                  "TTSSperkerID": ""
               },
               {
                   "IsReadOnly": true,
@@ -161,7 +161,7 @@ CocoroAI WebSocket API 仕様書
                   "SystemPrompt": "プロンプト",
                   "IsUseTTS": false,
                   "TTSEndpointURL": "",
-                  "TTSperkerID": ""
+                  "TTSSperkerID": ""
               }
           ]
       }
