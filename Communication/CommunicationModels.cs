@@ -107,9 +107,9 @@ namespace CocoroAIGUI.Communication
         public string ApiKey { get; set; } = string.Empty;
         public string LLMModel { get; set; } = string.Empty;
         public string SystemPrompt { get; set; } = string.Empty;
-        public bool IsUseNijivoice { get; set; }
-        public string NijivoiceApiKey { get; set; } = string.Empty;
-        public string NijivoiceActorId { get; set; } = string.Empty;
+        public bool IsUseTTS { get; set; }
+        public string TTSEndpointURL { get; set; } = string.Empty;
+        public string TTSperkerID { get; set; } = string.Empty;
     }
 
     /// <summary>

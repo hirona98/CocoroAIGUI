@@ -86,9 +86,9 @@ CocoroAI WebSocket API 仕様書
                   "ApiKey": "",
                   "LLMModel": "",
                   "SystemPrompt": "改行付きプロンプト\nプロンプト",
-                  "IsUseNijivoice": false,
-                  "NijivoiceApiKey": "",
-                  "NijivoiceActorId": ""
+                  "IsUseTTS": false,
+                  "TTSEndpointURL": "",
+                  "TTSperkerID": ""
               },
               {
                   "IsReadOnly": true,
@@ -98,9 +98,9 @@ CocoroAI WebSocket API 仕様書
                   "ApiKey": "",
                   "LLMModel": "",
                   "SystemPrompt": "プロンプト",
-                  "IsUseNijivoice": false,
-                  "NijivoiceApiKey": "",
-                  "NijivoiceActorId": ""
+                  "IsUseTTS": false,
+                  "TTSEndpointURL": "",
+                  "TTSperkerID": ""
               }
           ]
       }
@@ -147,9 +147,9 @@ CocoroAI WebSocket API 仕様書
                   "ApiKey": "",
                   "LLMModel": "",
                   "SystemPrompt": "改行付きプロンプト\nプロンプト",
-                  "IsUseNijivoice": false,
-                  "NijivoiceApiKey": "",
-                  "NijivoiceActorId": ""
+                  "IsUseTTS": false,
+                  "TTSEndpointURL": "",
+                  "TTSperkerID": ""
               },
               {
                   "IsReadOnly": true,
@@ -159,9 +159,9 @@ CocoroAI WebSocket API 仕様書
                   "ApiKey": "",
                   "LLMModel": "",
                   "SystemPrompt": "プロンプト",
-                  "IsUseNijivoice": false,
-                  "NijivoiceApiKey": "",
-                  "NijivoiceActorId": ""
+                  "IsUseTTS": false,
+                  "TTSEndpointURL": "",
+                  "TTSperkerID": ""
               }
           ]
       }
